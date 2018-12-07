@@ -1,0 +1,1 @@
+# minska-api
