@@ -1,10 +1,9 @@
 <?php
 
-    class Database{
-
+    class Database {
 
         private $host = "localhost";
-        private $db_name = "db_minska";
+        private $db_name = "minska";
         private $username = "root";
         private $password = "";
         public $conn;
@@ -13,10 +12,14 @@
 
             $this->conn = null;
 
-            try{
+            try {
+
                 $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
-            } catch(PDOException $exception){
+
+            } catch(PDOException $exception) {
+
                 echo "Connection error: " . $exception->getMessage();
+
             }
 
             return $this->conn;
