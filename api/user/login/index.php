@@ -6,6 +6,10 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+    return;
+}
+
 include_once '../../_config/database.php';
 include_once '../../_config/objects/user.php';
 

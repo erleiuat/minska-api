@@ -1,5 +1,7 @@
 <?php
 
+//error_reporting(0);
+
 class User {
 
     private $conn;
@@ -20,18 +22,36 @@ class User {
     function create(){
 
         $query = "
-            INSERT INTO " . $this->table_user . " SET
-            Firstname = :firstname,
-            Lastname = :lastname,
-            Email = :email,
-            Password = :password";
+        INSERT INTO " . $this->table_user . " SET
+        Firstname = :firstname,
+        Lastname = :lastname,
+        Email = :email,
+        Password = :password";
 
         $stmt = $this->conn->prepare($query);
 
-        $this->firstname=htmlspecialchars(strip_tags($this->firstname));
-        $this->lastname=htmlspecialchars(strip_tags($this->lastname));
-        $this->email=htmlspecialchars(strip_tags($this->email));
-        $this->password=htmlspecialchars(strip_tags($this->password));
+        if(strlen($this->firstname) > 0 && strlen($this->lastname) > 0){
+            $this->firstname=htmlspecialchars(strip_tags($this->firstname));
+            $this->lastname=htmlspecialchars(strip_tags($this->lastname));
+        } else {
+            return false;
+        }
+
+        if($this->emailExists()){
+            return false;
+        }
+
+        if(filter_var($this->email, FILTER_VALIDATE_EMAIL)){
+            $this->email=htmlspecialchars(strip_tags($this->email));
+        } else {
+            return false;
+        }
+
+        if (strlen($this->password) < 8 && !preg_match("#[0-9]+#", $this->password) && !preg_match("#[a-zA-Z]+#", $this->password)) {
+            return false;
+        } else {
+            $this->password=htmlspecialchars(strip_tags($this->password));
+        }
 
         $stmt->bindParam(':firstname', $this->firstname);
         $stmt->bindParam(':lastname', $this->lastname);
@@ -41,9 +61,7 @@ class User {
         $stmt->bindParam(':password', $password_hash);
 
         if($stmt->execute()){
-
             return true;
-
         }
 
         return false;
@@ -53,10 +71,10 @@ class User {
     function emailExists(){
 
         $query = "
-            SELECT ID, Firstname, Lastname, Password
-            FROM " . $this->table_user . "
-            WHERE Email = ?
-            LIMIT 0,1";
+        SELECT ID, Firstname, Lastname, Password
+        FROM " . $this->table_user . "
+        WHERE Email = ?
+        LIMIT 0,1";
 
         $stmt = $this->conn->prepare( $query );
 
@@ -90,12 +108,12 @@ class User {
         $password_set=!empty($this->password) ? ", Password = :password" : "";
 
         $query = "
-            UPDATE " . $this->table_users . " SET
-            Firstname = :firstname,
-            Lastname = :lastname,
-            Email = :email
-            {$password_set}
-            WHERE ID = :id";
+        UPDATE " . $this->table_users . " SET
+        Firstname = :firstname,
+        Lastname = :lastname,
+        Email = :email
+        {$password_set}
+        WHERE ID = :id";
 
         $stmt = $this->conn->prepare($query);
 

@@ -1,10 +1,14 @@
 <?php
 
-header("Access-Control-Allow-Origin: http://localhost/rest-api-authentication-example/");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+
+if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+    return;
+}
 
 include_once '../../_config/database.php';
 include_once '../../_config/objects/user.php';
@@ -13,7 +17,6 @@ $database = new Database();
 $db = $database->connect();
 
 $user = new User($db);
-
 $data = json_decode(file_get_contents("php://input"));
 
 $user->firstname = $data->firstname;
@@ -32,6 +35,5 @@ if($user->create()) {
     echo json_encode(array("message" => "Unable to create user."));
 
 }
-
 
 ?>
