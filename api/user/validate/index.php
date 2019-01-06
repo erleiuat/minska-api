@@ -6,6 +6,11 @@ header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
+if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+    return;
+}
+
+
 include_once '../../_config/core.php';
 include_once '../../_config/libs/php-jwt-master/src/BeforeValidException.php';
 include_once '../../_config/libs/php-jwt-master/src/ExpiredException.php';
@@ -25,7 +30,8 @@ if($jwt){
         http_response_code(200);
         echo json_encode(array(
             "message" => "Access granted.",
-            "data" => $decoded->data
+            "data" => $decoded->data,
+            "expires" => $decoded->exp
         ));
 
     } catch (Exception $e){
