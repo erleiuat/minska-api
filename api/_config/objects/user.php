@@ -10,6 +10,7 @@ class User {
     private $table_detail = "userdetails";
 
     public $id;
+    public $language;
     public $firstname;
     public $lastname;
     public $email;
@@ -34,21 +35,21 @@ class User {
             $this->firstname=htmlspecialchars(strip_tags($this->firstname));
             $this->lastname=htmlspecialchars(strip_tags($this->lastname));
         } else {
-            return false;
+            throw new InvalidArgumentException('Invalid Firstname or Lastname');
         }
 
         if($this->emailExists()){
-            return false;
+            throw new InvalidArgumentException('E-Mail already in use');
         }
 
         if(filter_var($this->email, FILTER_VALIDATE_EMAIL)){
             $this->email=htmlspecialchars(strip_tags($this->email));
         } else {
-            return false;
+            throw new InvalidArgumentException('Invalid E-Mail Adress');
         }
 
         if (strlen($this->password) < 8 && !preg_match("#[0-9]+#", $this->password) && !preg_match("#[a-zA-Z]+#", $this->password)) {
-            return false;
+            throw new InvalidArgumentException('Invalid Password');
         } else {
             $this->password=htmlspecialchars(strip_tags($this->password));
         }
@@ -71,7 +72,7 @@ class User {
     function emailExists(){
 
         $query = "
-        SELECT ID, Firstname, Lastname, Password
+        SELECT ID, Firstname, Lastname, Password, Language
         FROM " . $this->table_user . "
         WHERE Email = ?
         LIMIT 0,1";
@@ -91,6 +92,7 @@ class User {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             $this->id = $row['ID'];
+            $this->language = $row['Language'];
             $this->firstname = $row['Firstname'];
             $this->lastname = $row['Lastname'];
             $this->password = $row['Password'];

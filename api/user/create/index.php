@@ -24,15 +24,19 @@ $user->lastname = $data->lastname;
 $user->email = $data->email;
 $user->password = $data->password;
 
-if($user->create()) {
+try {
 
+    $user->create();
     http_response_code(200);
-    echo json_encode(array("message" => "User was created."));
+    echo json_encode(array("message" => "User created"));
 
-} else {
+} catch (Exception $e) {
 
     http_response_code(400);
-    echo json_encode(array("message" => "Unable to create user."));
+    echo json_encode(array(
+        "message" => "User not created",
+        "error" => $e->getMessage()
+    ));
 
 }
 

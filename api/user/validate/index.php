@@ -10,7 +10,6 @@ if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
     return;
 }
 
-
 include_once '../../_config/core.php';
 include_once '../../_config/libs/php-jwt-master/src/BeforeValidException.php';
 include_once '../../_config/libs/php-jwt-master/src/ExpiredException.php';
@@ -26,7 +25,6 @@ if($jwt){
     try {
 
         $decoded = JWT::decode($jwt, $key, array('HS256'));
-
         http_response_code(200);
         echo json_encode(array(
             "message" => "Access granted.",
