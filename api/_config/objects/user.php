@@ -5,9 +5,7 @@
 class User {
 
     private $conn;
-    private $table_user = "users";
-    private $table_aim = "useraims";
-    private $table_detail = "userdetails";
+    private $db_table = "users";
 
     public $id;
     public $language;
@@ -15,6 +13,8 @@ class User {
     public $lastname;
     public $email;
     public $password;
+    public $isFemale;
+    public $aims;
 
     public function __construct($db){
         $this->conn = $db;
@@ -23,7 +23,7 @@ class User {
     function create(){
 
         $query = "
-        INSERT INTO " . $this->table_user . " SET
+        INSERT INTO " . $this->db_table . " SET
         Firstname = :firstname,
         Lastname = :lastname,
         Email = :email,
@@ -72,67 +72,68 @@ class User {
     function emailExists(){
 
         $query = "
-        SELECT ID, Firstname, Lastname, Password, Language
-        FROM " . $this->table_user . "
+        SELECT ID, Firstname, Lastname, Password, Language, IsFemale, Height, Aim_Weight, Aim_Date
+        FROM " . $this->db_table . "
         WHERE Email = ?
-        LIMIT 0,1";
-
-        $stmt = $this->conn->prepare( $query );
+        LIMIT 0,1
+        ";
 
         $this->email=htmlspecialchars(strip_tags($this->email));
 
+        $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->email);
-
         $stmt->execute();
-
-        $num = $stmt->rowCount();
-
-        if($num>0){
+        if($stmt->rowCount()>0){
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
             $this->id = $row['ID'];
             $this->language = $row['Language'];
             $this->firstname = $row['Firstname'];
             $this->lastname = $row['Lastname'];
+            $this->isFemale = $row['IsFemale'];
+            $this->height = $row['Height'];
             $this->password = $row['Password'];
+            $this->aims = array(
+            "weight" => $row['Aim_Weight'],
+            "date" => $row['Aim_Date']
+            );
 
             return true;
 
         }
 
-        return false;
-
     }
 
     public function update(){
 
-        $password_set=!empty($this->password) ? ", Password = :password" : "";
-
         $query = "
-        UPDATE " . $this->table_users . " SET
+        UPDATE " . $this->db_table . " SET
         Firstname = :firstname,
         Lastname = :lastname,
-        Email = :email
-        {$password_set}
-        WHERE ID = :id";
+        Language = :language,
+        IsFemale = :isFemale,
+        Height = :height,
+        Aim_Weight = :aim_weight,
+        Aim_Date = :aim_date
+        WHERE ID = :id
+        ";
 
         $stmt = $this->conn->prepare($query);
-
         $this->firstname=htmlspecialchars(strip_tags($this->firstname));
         $this->lastname=htmlspecialchars(strip_tags($this->lastname));
-        $this->email=htmlspecialchars(strip_tags($this->email));
+        $this->language=htmlspecialchars(strip_tags($this->language));
+        $this->isFemale=htmlspecialchars(strip_tags($this->isFemale));
+        $this->height=htmlspecialchars(strip_tags($this->height));
+        $this->aims->weight=htmlspecialchars(strip_tags($this->aims->weight));
+        $this->aims->date=htmlspecialchars(strip_tags($this->aims->date));
 
         $stmt->bindParam(':firstname', $this->firstname);
         $stmt->bindParam(':lastname', $this->lastname);
-        $stmt->bindParam(':email', $this->email);
-
-        if(!empty($this->password)){
-            $this->password=htmlspecialchars(strip_tags($this->password));
-            $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
-            $stmt->bindParam(':password', $password_hash);
-        }
-
+        $stmt->bindParam(':language', $this->language);
+        $stmt->bindParam(':isFemale', $this->isFemale);
+        $stmt->bindParam(':height', $this->height);
+        $stmt->bindParam(':aim_weight', $this->aims->weight);
+        $stmt->bindParam(':aim_date', $this->aims->date);
         $stmt->bindParam(':id', $this->id);
 
         if($stmt->execute()){

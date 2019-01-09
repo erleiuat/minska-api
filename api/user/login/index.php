@@ -16,8 +16,9 @@ include_once '../../_config/objects/user.php';
 $database = new Database();
 $db = $database->connect();
 $user = new User($db);
-
 $data = json_decode(file_get_contents("php://input"));
+
+//----- End of default Configuration
 
 $user->email = $data->email;
 $email_exists = $user->emailExists();
@@ -40,15 +41,16 @@ if($email_exists && password_verify($data->password, $user->password)){
             "id" => $user->id,
             "firstname" => $user->firstname,
             "lastname" => $user->lastname,
-            "email" => $user->email,
             "language" => $user->language,
-            "expires" => $exp
+            "height" => $user->height,
+            "isFemale" => $user->isFemale,
+            "aims" => $user->aims
         )
     );
 
-    http_response_code(200);
-
     $jwt = JWT::encode($token, $key);
+
+    http_response_code(200);
     echo json_encode(array(
         "message" => "Successful login.",
         "jwt" => $jwt

@@ -13,6 +13,13 @@ if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
 include_once '../../_config/database.php';
 include_once '../../_config/objects/user.php';
 
+$database = new Database();
+$db = $database->connect();
+$user = new User($db);
+$data = json_decode(file_get_contents("php://input"));
+
+//----- End of default Configuration
+
 include_once '../../_config/core.php';
 include_once '../../_config/libs/php-jwt-master/src/BeforeValidException.php';
 include_once '../../_config/libs/php-jwt-master/src/ExpiredException.php';
@@ -20,12 +27,6 @@ include_once '../../_config/libs/php-jwt-master/src/SignatureInvalidException.ph
 include_once '../../_config/libs/php-jwt-master/src/JWT.php';
 use \Firebase\JWT\JWT;
 
-$database = new Database();
-$db = $database->connect();
-
-$user = new User($db);
-
-$data = json_decode(file_get_contents("php://input"));
 $jwt=isset($data->jwt) ? $data->jwt : "";
 
 if($jwt){
@@ -34,12 +35,15 @@ if($jwt){
 
         $decoded = JWT::decode($jwt, $key, array('HS256'));
 
+        $user->id = $decoded->data->id;
         $user->firstname = $data->firstname;
         $user->lastname = $data->lastname;
-        $user->password = $data->password;
-        $user->id = $decoded->data->id;
+        $user->height = $data->height;
+        $user->language = $data->language;
+        $user->isFemale = $data->isFemale;
+        $user->aims = $data->aims;
 
-        if($user->update()) {
+            if($user->update()){
 
             $token = array(
                 "iss" => $iss,
@@ -50,9 +54,10 @@ if($jwt){
                     "id" => $user->id,
                     "firstname" => $user->firstname,
                     "lastname" => $user->lastname,
-                    "email" => $user->email,
                     "language" => $user->language,
-                    "expires" => $exp
+                    "height" => $user->height,
+                    "isFemale" => $user->isFemale,
+                    "aims" => $user->aims
                 )
             );
 
@@ -64,13 +69,16 @@ if($jwt){
                 "jwt" => $jwt
             ));
 
-            } else {
+        } else {
 
-                http_response_code(401);
-                echo json_encode(array("message" => "Unable to update user."));
-            }
+            http_response_code(401);
+            echo json_encode(array(
+                "message" => "Unable to update user.",
+            ));
 
-    }catch (Exception $e){
+        }
+
+    } catch (Exception $e){
 
         http_response_code(401);
 
@@ -78,6 +86,7 @@ if($jwt){
         "message" => "Access denied.",
         "error" => $e->getMessage()
         ));
+
     }
 
 }else{
