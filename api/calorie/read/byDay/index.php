@@ -1,23 +1,8 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Max-Age: 3600");
-header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
-if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
-    return;
-}
-
+// ---- Include Defaults
+include_once '../../../_config/headers.php';
 include_once '../../../_config/database.php';
-include_once '../../../_config/objects/calorie.php';
-
-$database = new Database();
-$db = $database->connect();
-$calorie = new Calorie($db);
-$data = json_decode(file_get_contents("php://input"));
-
 include_once '../../../_config/core.php';
 include_once '../../../_config/libs/php-jwt-master/src/BeforeValidException.php';
 include_once '../../../_config/libs/php-jwt-master/src/ExpiredException.php';
@@ -25,7 +10,16 @@ include_once '../../../_config/libs/php-jwt-master/src/SignatureInvalidException
 include_once '../../../_config/libs/php-jwt-master/src/JWT.php';
 use \Firebase\JWT\JWT;
 
-//----- End of default Configuration
+// ---- Initialize Default
+$database = new Database();
+$db = $database->connect();
+$data = json_decode(file_get_contents("php://input"));
+
+// ---- Include Object
+include_once '../../../_config/objects/calorie.php';
+$calorie = new Calorie($db);
+// ---- End of default Configuration
+
 $jwt=isset($data->jwt) ? $data->jwt : "";
 
 if($jwt){
@@ -63,30 +57,18 @@ if($jwt){
             echo json_encode($calories_arr);
 
         } else {
-
-            http_response_code(404);
-            echo json_encode(array(
-                "message" => "No Calories found."
-            ));
-
+            http_response_code(204);
+            echo json_encode(array("message" => "No Data"));
         }
 
     } catch(Exception $e) {
-
         http_response_code(401);
-
-        echo json_encode(array(
-        "message" => "Access denied.",
-        "error" => $e->getMessage()
-        ));
-
+        echo json_encode(array("message" => "Access denied"));
     }
 
 } else {
-
     http_response_code(401);
-    echo json_encode(array("message" => "Access denied."));
-
+    echo json_encode(array("message" => "Access denied"));
 }
 
 ?>
