@@ -2,8 +2,8 @@
 
 // ---- Include Defaults
 include_once '../../../_config/headers.php';
-include_once '../../../_config/database.php';
 include_once '../../../_config/core.php';
+include_once '../../../_config/database.php';
 include_once '../../../_config/libs/php-jwt-master/src/BeforeValidException.php';
 include_once '../../../_config/libs/php-jwt-master/src/ExpiredException.php';
 include_once '../../../_config/libs/php-jwt-master/src/SignatureInvalidException.php';
@@ -47,29 +47,23 @@ if($jwt){
                     "measuredate" => $measuredate,
                     "creationdate" => $creationdate
                 );
-
                 array_push($weights_arr, $weight_item);
-
                 $i++;
 
             }
 
-            http_response_code(200);
-            echo json_encode($weights_arr);
+            returnSuccess($weights_arr);
 
         } else {
-            http_response_code(204);
-            echo json_encode(array("message" => "No Data"));
+            returnNoData();
         }
 
     } catch(Exception $e) {
-        http_response_code(401);
-        echo json_encode(array("message" => "Access denied"));
+        returnForbidden();
     }
 
 } else {
-    http_response_code(401);
-    echo json_encode(array("message" => "Access denied"));
+    returnBadRequest();
 }
 
 ?>
