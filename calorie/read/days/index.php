@@ -34,35 +34,30 @@ if($jwt){
 
         if($num>0){
 
-            $days_arr=array();
-            $days_arr["records"]=array();
             $i = 1;
+            $val_arr=array();
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
-                $day_item = array(
+                $val_item = array(
                     "date" => $date,
                 );
-                array_push($days_arr["records"], $day_item);
+                array_push($val_arr, $val_item);
                 $i++;
             }
 
-            http_response_code(200);
-            echo json_encode($days_arr);
+            returnSuccess($val_arr);
 
         } else {
-            http_response_code(204);
-            echo json_encode(array("message" => "No Data"));
+            returnNoData();
         }
 
     } catch(Exception $e) {
-        http_response_code(401);
-        echo json_encode(array("message" => "Access denied"));
+        returnForbidden($e);
     }
 
 } else {
-    http_response_code(401);
-    echo json_encode(array("message" => "Access denied"));
+    returnBadRequest();
 }
 
 ?>

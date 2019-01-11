@@ -20,7 +20,6 @@ include_once '../../_config/objects/calorie.php';
 $calorie = new Calorie($db);
 // ---- End of default Configuration
 
-
 $jwt=isset($data->jwt) ? $data->jwt : "";
 
 if($jwt){
@@ -28,7 +27,6 @@ if($jwt){
     try {
 
         $decoded = JWT::decode($jwt, $key, array('HS256'));
-
         $calorie->userid = $decoded->data->id;
         $calorie->title = $data->title;
         $calorie->calories = $data->calories;
@@ -36,24 +34,18 @@ if($jwt){
         $calorie->date = $data->date;
 
         try {
-
             $calorie->create();
-            http_response_code(200);
-            echo json_encode(array("message" => "Calorie created"));
-
+            returnSuccess();
         } catch (Exception $e) {
-            http_response_code(400);
-            echo json_encode(array("message" => "Error"));
+            returnError($e);
         }
 
     } catch(Exception $e) {
-        http_response_code(401);
-        echo json_encode(array("message" => "Access denied"));
+        returnForbidden($e);
     }
 
 } else {
-    http_response_code(401);
-    echo json_encode(array("message" => "Access denied"));
+    returnBadRequest();
 }
 
 ?>

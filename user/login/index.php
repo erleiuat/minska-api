@@ -42,15 +42,9 @@ if($email_exists && password_verify($data->password, $user->password)){
     );
 
     $jwt = JWT::encode($token, $key);
-
-    http_response_code(200);
-    echo json_encode(array(
-        "message" => "Successful login",
-        "jwt" => $jwt
-    ));
+    returnSuccess($jwt);
 
 } else {
-    http_response_code(401);
-    echo json_encode(array("message" => "Login failed"));
+    returnBadRequest();
 }
 ?>

@@ -31,24 +31,18 @@ if($jwt){
         $weight->id = $data->id;
 
         try {
-
             $weight->delete();
-            http_response_code(200);
-            echo json_encode(array("message" => "Weight deleted"));
-
+            returnSuccess();
         } catch (Exception $e) {
-            http_response_code(400);
-            echo json_encode(array("message" => "Error"));
+            returnError($e);
         }
 
     } catch(Exception $e) {
-        http_response_code(401);
-        echo json_encode(array("message" => "Access denied"));
+        returnForbidden($e);
     }
 
 } else {
-    http_response_code(401);
-    echo json_encode(array("message" => "Access denied"));
+    returnBadRequest();
 }
 
 ?>

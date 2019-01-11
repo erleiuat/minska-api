@@ -38,7 +38,6 @@ if($jwt){
             $i = 1;
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-
                 extract($row);
                 $weight_item = array(
                     "id" => $id,
@@ -49,7 +48,6 @@ if($jwt){
                 );
                 array_push($weights_arr, $weight_item);
                 $i++;
-
             }
 
             returnSuccess($weights_arr);
@@ -58,8 +56,8 @@ if($jwt){
             returnNoData();
         }
 
-    } catch(Exception $e) {
-        returnForbidden();
+    } catch(Exception $e){
+        returnForbidden($e);
     }
 
 } else {

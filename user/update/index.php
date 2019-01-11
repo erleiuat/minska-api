@@ -36,7 +36,7 @@ if($jwt){
         $user->isFemale = $data->isFemale;
         $user->aims = $data->aims;
 
-            if($user->update()){
+        if($user->update()){
 
             $token = array(
                 "iss" => $iss,
@@ -55,26 +55,18 @@ if($jwt){
             );
 
             $jwt = JWT::encode($token, $key);
-
-            http_response_code(200);
-            echo json_encode(array(
-                "message" => "User was updated",
-                "jwt" => $jwt
-            ));
+            returnSuccess($jwt);
 
         } else {
-            http_response_code(401);
-            echo json_encode(array("message" => "Error"));
+            returnError();
         }
 
     } catch (Exception $e){
-        http_response_code(401);
-        echo json_encode(array("message" => "Access denied."));
+        returnForbidden($e);
     }
 
-}else{
-    http_response_code(401);
-    echo json_encode(array("message" => "Access denied"));
+} else {
+    returnBadRequest();
 }
 
 ?>

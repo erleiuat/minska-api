@@ -36,39 +36,30 @@ if($jwt){
         if($num>0){
 
             $calories_arr=array();
-            $calories_arr["records"]=array();
-
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 
                 extract($row);
-
                 $calorie_item = array(
                     "id" => $id,
                     "title" => $title,
                     "calories" => $calories,
                     "amount" => $amount
                 );
-
-                array_push($calories_arr["records"], $calorie_item);
+                array_push($calories_arr, $calorie_item);
 
             }
-
-            http_response_code(200);
-            echo json_encode($calories_arr);
+            returnSuccess($calories_arr);
 
         } else {
-            http_response_code(204);
-            echo json_encode(array("message" => "No Data"));
+            returnNoData();
         }
 
     } catch(Exception $e) {
-        http_response_code(401);
-        echo json_encode(array("message" => "Access denied"));
+        returnForbidden($e);
     }
 
 } else {
-    http_response_code(401);
-    echo json_encode(array("message" => "Access denied"));
+    returnBadRequest();
 }
 
 ?>

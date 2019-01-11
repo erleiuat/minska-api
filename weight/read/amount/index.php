@@ -41,7 +41,6 @@ if($jwt){
         if($num>0){
 
             $weights_arr=array();
-            $weights_arr["records"]=array();
             $i = 1;
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -55,28 +54,23 @@ if($jwt){
                     "creationdate" => $creationdate
                 );
 
-                array_push($weights_arr["records"], $weight_item);
-
+                array_push($weights_arr, $weight_item);
                 $i++;
 
             }
 
-            http_response_code(200);
-            echo json_encode($weights_arr);
+            returnSuccess($weights_arr);
 
         } else {
-            http_response_code(204);
-            echo json_encode(array("message" => "No Data"));
+            returnNoData();
         }
 
-    } catch(Exception $e) {
-        http_response_code(401);
-        echo json_encode(array("message" => "Access denied"));
+    } catch(Exception $e){
+        returnForbidden($e);
     }
 
 } else {
-    http_response_code(401);
-    echo json_encode(array("message" => "Access denied"));
+    returnBadRequest();
 }
 
 ?>

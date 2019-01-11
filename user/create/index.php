@@ -20,18 +20,22 @@ include_once '../../_config/objects/user.php';
 $user = new User($db);
 // ---- End of default Configuration
 
-$user->firstname = $data->firstname;
-$user->lastname = $data->lastname;
-$user->email = $data->email;
-$user->password = $data->password;
+if($data->firstname && $data->lastname && $data->email && $data->password){
 
-try {
-    $user->create();
-    http_response_code(200);
-    echo json_encode(array("message" => "User created"));
-} catch (Exception $e) {
-    http_response_code(400);
-    echo json_encode(array("message" => "User not created"));
+    $user->firstname = $data->firstname;
+    $user->lastname = $data->lastname;
+    $user->email = $data->email;
+    $user->password = $data->password;
+
+    try {
+        $user->create();
+        returnSuccess();
+    } catch (Exception $e) {
+        returnBadRequest();
+    }
+
+} else {
+    returnBadRequest();
 }
 
 ?>

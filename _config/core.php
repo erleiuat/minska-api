@@ -51,6 +51,14 @@
         }
     }
 
+    function returnBadRequest(){
+        http_response_code(400);
+        echo json_encode(array(
+            "status" => "failed",
+            "message" => "Bad Request: Values are wrong or missing.",
+        ));
+    }
+
     function returnError($reason = false){
         if($reason){
             http_response_code(500);
@@ -68,12 +76,6 @@
         }
     }
 
-    function returnBadRequest(){
-        http_response_code(400);
-        echo json_encode(array(
-            "status" => "failed",
-            "message" => "Bad Request: The request body values don't have the correct format.",
-        ));
-    }
+
 
 ?>
