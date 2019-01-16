@@ -20,13 +20,13 @@ include_once '../../_config/objects/user.php';
 $user = new User($db);
 // ---- End of default Configuration
 
-$jwt=isset($data->jwt) ? $data->jwt : "";
+$token = isset($data->token) ? $data->token : "";
 
-if($jwt){
+if($token){
 
     try {
 
-        $decoded = JWT::decode($jwt, $key, array('HS256'));
+        $decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
 
         $user->id = $decoded->data->id;
         $user->firstname = $data->firstname;
@@ -39,10 +39,10 @@ if($jwt){
         if($user->update()){
 
             $token = array(
-                "iss" => $iss,
-                "iat" => $iat,
-                "nbf" => $nbf,
-                "exp" => $exp,
+                "iss" => $token_conf['issuer'],
+                "iat" => $token_conf['issuedAt'],
+                "exp" => $token_conf['expireAt'],
+                "nbf" => $token_conf['notBefore'],
                 "data" => array(
                     "id" => $user->id,
                     "firstname" => $user->firstname,
@@ -54,7 +54,7 @@ if($jwt){
                 )
             );
 
-            $jwt = JWT::encode($token, $key);
+            $jwt = JWT::encode($token, $token_conf->secret);
             returnSuccess($jwt);
 
         } else {

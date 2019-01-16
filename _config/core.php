@@ -1,13 +1,18 @@
 <?php
 
+    // Application Params
     error_reporting(E_ALL);
+    //error_reporting(0); <-- to deactivate
     date_default_timezone_set('Europe/Zurich');
 
-    $key = "lkiuerf@oja78781[ojaklj]";
-    $iss = "MinskaAPI";
-    $iat = time();
-    $nbf = $iat;
-    $exp = $iat+ (60*60);
+    $token_conf = array(
+        "secret" => 'lkiuerf@oja78781[ojaklj]JHjksa122:891',
+        "algorithm" => array('HS256'),
+        "issuer" => 'Official Minska API',
+        "issuedAt" => time(),
+        "notBefore" => time(),
+        "expireAt" => time() + (60*60),
+    );
 
     function returnSuccess($data = false){
         if($data){

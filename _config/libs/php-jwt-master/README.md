@@ -37,7 +37,7 @@ $token = array(
  * for a list of spec-compliant algorithms.
  */
 $jwt = JWT::encode($token, $key);
-$decoded = JWT::decode($jwt, $key, array('HS256'));
+$decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
 
 print_r($decoded);
 
@@ -56,7 +56,7 @@ $decoded_array = (array) $decoded;
  * Source: http://self-issued.info/docs/draft-ietf-oauth-json-web-token.html#nbfDef
  */
 JWT::$leeway = 60; // $leeway in seconds
-$decoded = JWT::decode($jwt, $key, array('HS256'));
+$decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
 
 ?>
 ```

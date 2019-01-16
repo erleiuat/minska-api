@@ -26,10 +26,10 @@ $email_exists = $user->emailExists();
 if($email_exists && password_verify($data->password, $user->password)){
 
     $token = array(
-        "iss" => $iss,
-        "iat" => $iat,
-        "nbf" => $nbf,
-        "exp" => $exp,
+        "iss" => $token_conf['issuer'],
+        "iat" => $token_conf['issuedAt'],
+        "exp" => $token_conf['expireAt'],
+        "nbf" => $token_conf['notBefore'],
         "data" => array(
             "id" => $user->id,
             "firstname" => $user->firstname,
@@ -41,7 +41,7 @@ if($email_exists && password_verify($data->password, $user->password)){
         )
     );
 
-    $jwt = JWT::encode($token, $key);
+    $jwt = JWT::encode($token, $token_conf['secret']);
     returnSuccess($jwt);
 
 } else {
