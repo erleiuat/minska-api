@@ -20,14 +20,13 @@ include_once '../../../_config/objects/weight.php';
 $weight = new Weight($db);
 // ---- End of default Configuration
 
+$token = isset($data->token) ? $data->token : "";
 
-$jwt=isset($data->jwt) ? $data->jwt : "";
-
-if($jwt){
+if($token){
 
     try {
 
-        $decoded = JWT::decode($jwt, $key, array('HS256'));
+        $decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
         $weight->userid = $decoded->data->id;
 
         if(isset($data->order) && $data->order !== 'DESC'){

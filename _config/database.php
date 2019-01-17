@@ -2,12 +2,13 @@
 
     class Database {
 
+        // Database Params
         private $host = "localhost";
         private $db_name = "minska";
         private $username = "root";
         private $password = "";
-        public $conn;
 
+        public $conn;
         public function connect(){
 
             $this->conn = null;

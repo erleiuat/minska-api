@@ -20,13 +20,13 @@ include_once '../../../_config/objects/calorie.php';
 $calorie = new Calorie($db);
 // ---- End of default Configuration
 
-$jwt=isset($data->jwt) ? $data->jwt : "";
+$token = isset($data->token) ? $data->token : "";
 
-if($jwt){
+if($token){
 
     try {
 
-        $decoded = JWT::decode($jwt, $key, array('HS256'));
+        $decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
         $calorie->userid = $decoded->data->id;
         $calorie->date = $data->date;
 
