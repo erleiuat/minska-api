@@ -54,7 +54,7 @@ if($token){
                 )
             );
 
-            $jwt = JWT::encode($token, $token_conf->secret);
+            $jwt = JWT::encode($token, $token_conf['secret']);
             returnSuccess($jwt);
 
         } else {

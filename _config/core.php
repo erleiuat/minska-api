@@ -23,7 +23,7 @@
                 "content" => $data
             ));
         } else {
-            http_response_code(204);
+            http_response_code(200);
             echo json_encode(array(
                 "status" => "success",
                 "message" => "Request successfully handled (Returning no content)"
@@ -32,7 +32,7 @@
     }
 
     function returnNoData(){
-        http_response_code(404);
+        http_response_code(204);
         echo json_encode(array(
             "status" => "success",
             "message" => "Request successfully handled but no data found"
