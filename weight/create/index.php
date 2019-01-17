@@ -32,8 +32,10 @@ if($jwt){
         $weight->measuredate = $data->date;
 
         try {
+
             $weight->create();
-            returnSuccess();
+            returnSuccess($weight->id);
+
         } catch (Exception $e) {
             returnError($e);
         }

@@ -54,9 +54,8 @@ class Weight {
 
 
         if($stmt->execute()){
-
+            $this->id = $this->conn->lastInsertId();
             return true;
-
         }
 
         return false;

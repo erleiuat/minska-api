@@ -75,9 +75,8 @@ class Calorie {
         $stmt->bindParam(":date", $this->date);
 
         if($stmt->execute()){
-
+            $this->id = $this->conn->lastInsertId();
             return true;
-
         }
 
         return false;

@@ -35,7 +35,7 @@ if($jwt){
 
         try {
             $calorie->create();
-            returnSuccess();
+            returnSuccess($calorie->id);
         } catch (Exception $e) {
             returnError($e);
         }

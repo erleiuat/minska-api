@@ -35,19 +35,15 @@ if($jwt){
         if($num>0){
 
             $weights_arr=array();
-            $i = 1;
 
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
                 extract($row);
                 $weight_item = array(
                     "id" => $id,
-                    "number" => $i,
                     "weight" => $weight,
                     "measuredate" => $measuredate,
-                    "creationdate" => $creationdate
                 );
                 array_push($weights_arr, $weight_item);
-                $i++;
             }
 
             returnSuccess($weights_arr);
