@@ -21,44 +21,15 @@ if($token){
 
         $decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
 
-        print_r($_FILES);
-
         if($_FILES['img']['type'] == 'image/png'){
             $source = imagecreatefrompng($_FILES['img']['tmp_name']);
         } else if($_FILES['img']['type'] == 'image/jpeg') {
             $source = imagecreatefromjpeg($_FILES['img']['tmp_name']);
+        } else if($_FILES['img']['type'] == 'image/gif') {
+            $source = imagecreatefromgif($_FILES['img']['tmp_name']);
         } else {
             returnBadRequest();
             die();
-        }
-
-        if (function_exists('exif_read_data')) {
-
-            $exif = exif_read_data($_FILES['img']['tmp_name']);
-
-            if($exif && isset($exif['Orientation'])) {
-                $orientation = $exif['Orientation'];
-                if($orientation != 1){
-                    $deg = 0;
-                    switch ($orientation) {
-                        case 3:
-                        $deg = 180;
-                        break;
-                        case 6:
-                        $deg = 270;
-                        break;
-                        case 8:
-                        $deg = 90;
-                        break;
-                    }
-
-                    if ($deg) {
-                        $source = imagerotate($source, $deg, 0);
-                    }
-
-
-                }
-            }
         }
 
         list($width, $height) = getimagesize($_FILES['img']['tmp_name']);
