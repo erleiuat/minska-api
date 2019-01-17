@@ -19,10 +19,9 @@ class Template {
     function read($amount = false, $order = 'DESC'){
 
         $query = "
-        SELECT ID as id, Weight as weight, MeasureDate as measuredate, CreationDate as creationdate
+        SELECT ID as id, Title as title, DefaultAmout as amount, Calories as calories, Image as image
         FROM ". $this->db_table . "
-        WHERE UserID = :userid
-        ORDER BY CreationDate ". $order;
+        WHERE UserID = :userid";
 
         if($amount){
             $query .= " LIMIT ". $amount;

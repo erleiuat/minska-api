@@ -20,13 +20,13 @@ include_once '../../_config/objects/template.php';
 $template = new Template($db);
 // ---- End of default Configuration
 
-$jwt=isset($data->jwt) ? $data->jwt : "";
+$token = isset($data->token) ? $data->token : "";
 
-if($jwt){
+if($token){
 
     try {
 
-        $decoded = JWT::decode($jwt, $key, array('HS256'));
+        $decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
         $template->userid = $decoded->data->id;
         $template->title = $data->title;
         $template->calories = $data->calories;

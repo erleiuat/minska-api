@@ -8,15 +8,15 @@ include_once '../../../_config/libs/php-jwt-master/src/SignatureInvalidException
 include_once '../../../_config/libs/php-jwt-master/src/JWT.php';
 use \Firebase\JWT\JWT;
 
-$jwt = $_POST['jwt'];
-$jwt = isset($_POST['jwt']) ? $jwt : "";
+$token = $_POST['token'];
+$token = isset($_POST['token']) ? $token : "";
 
 
-if($jwt){
+if($token){
 
     try {
 
-        $decoded = JWT::decode($jwt, $key, array('HS256'));
+        $decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
 
         if($_FILES['img']['type'] == 'image/png'){
             $source = imagecreatefrompng($_FILES['img']['tmp_name']);
