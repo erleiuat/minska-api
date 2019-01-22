@@ -14,6 +14,7 @@ class User {
     public $email;
     public $password;
     public $isFemale;
+    public $birthdate;
     public $aims;
 
     public function __construct($db){
@@ -72,7 +73,7 @@ class User {
     function emailExists(){
 
         $query = "
-        SELECT ID, Firstname, Lastname, Password, Language, IsFemale, Height, Aim_Weight, Aim_Date
+        SELECT ID, Firstname, Lastname, Password, Language, IsFemale, Birthdate, Height, Aim_Weight, Aim_Date
         FROM " . $this->db_table . "
         WHERE Email = ?
         LIMIT 0,1
@@ -90,6 +91,7 @@ class User {
             $this->language = $row['Language'];
             $this->firstname = $row['Firstname'];
             $this->lastname = $row['Lastname'];
+            $this->birthdate = $row['Birthdate'];
             $this->isFemale = $row['IsFemale'];
             $this->height = $row['Height'];
             $this->password = $row['Password'];
@@ -112,6 +114,7 @@ class User {
         Lastname = :lastname,
         Language = :language,
         IsFemale = :isFemale,
+        Birthdate = :birthdate,
         Height = :height,
         Aim_Weight = :aim_weight,
         Aim_Date = :aim_date
@@ -123,6 +126,7 @@ class User {
         $this->lastname=htmlspecialchars(strip_tags($this->lastname));
         $this->language=htmlspecialchars(strip_tags($this->language));
         $this->isFemale=htmlspecialchars(strip_tags($this->isFemale));
+        $this->birthdate=htmlspecialchars(strip_tags($this->birthdate));
         $this->height=htmlspecialchars(strip_tags($this->height));
         $this->aims->weight=htmlspecialchars(strip_tags($this->aims->weight));
         $this->aims->date=htmlspecialchars(strip_tags($this->aims->date));
@@ -132,6 +136,7 @@ class User {
         $stmt->bindParam(':language', $this->language);
         $stmt->bindParam(':isFemale', $this->isFemale);
         $stmt->bindParam(':height', $this->height);
+        $stmt->bindParam(':birthdate', $this->birthdate);
         $stmt->bindParam(':aim_weight', $this->aims->weight);
         $stmt->bindParam(':aim_date', $this->aims->date);
         $stmt->bindParam(':id', $this->id);

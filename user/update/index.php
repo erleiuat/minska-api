@@ -34,6 +34,7 @@ if($token){
         $user->height = $data->height;
         $user->language = $data->language;
         $user->isFemale = $data->isFemale;
+        $user->birthdate = $data->birthdate;
         $user->aims = $data->aims;
 
         if($user->update()){
@@ -50,6 +51,7 @@ if($token){
                     "language" => $user->language,
                     "height" => $user->height,
                     "isFemale" => $user->isFemale,
+                    "birthdate" => $user->birthdate,
                     "aims" => $user->aims
                 )
             );

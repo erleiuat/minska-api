@@ -36,6 +36,7 @@ if($email_exists && password_verify($data->password, $user->password)){
             "lastname" => $user->lastname,
             "language" => $user->language,
             "height" => $user->height,
+            "birthdate" => $user->birthdate,
             "isFemale" => $user->isFemale,
             "aims" => $user->aims
         )
