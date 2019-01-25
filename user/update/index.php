@@ -31,6 +31,7 @@ if($token){
         $user->id = $decoded->data->id;
         $user->firstname = $data->firstname;
         $user->lastname = $data->lastname;
+        $user->email = $data->email;
         $user->height = $data->height;
         $user->language = $data->language;
         $user->isFemale = $data->isFemale;
@@ -48,6 +49,7 @@ if($token){
                     "id" => $user->id,
                     "firstname" => $user->firstname,
                     "lastname" => $user->lastname,
+                    "email" => $user->email,
                     "language" => $user->language,
                     "height" => $user->height,
                     "isFemale" => $user->isFemale,

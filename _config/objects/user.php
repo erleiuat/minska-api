@@ -73,7 +73,7 @@ class User {
     function emailExists(){
 
         $query = "
-        SELECT ID, Firstname, Lastname, Password, Language, IsFemale, Birthdate, Height, Aim_Weight, Aim_Date
+        SELECT ID, Firstname, Lastname, Email, Password, Language, IsFemale, Birthdate, Height, Aim_Weight, Aim_Date
         FROM " . $this->db_table . "
         WHERE Email = ?
         LIMIT 0,1
@@ -91,6 +91,7 @@ class User {
             $this->language = $row['Language'];
             $this->firstname = $row['Firstname'];
             $this->lastname = $row['Lastname'];
+            $this->email = $row['Email'];
             $this->birthdate = $row['Birthdate'];
             $this->isFemale = $row['IsFemale'];
             $this->height = $row['Height'];

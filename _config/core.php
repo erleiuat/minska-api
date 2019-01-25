@@ -11,7 +11,7 @@
         "issuer" => 'Official Minska API',
         "issuedAt" => time(),
         "notBefore" => time(),
-        "expireAt" => time() + (60*60),
+        "expireAt" => time() + (604800),
     );
 
     function returnSuccess($data = false){
@@ -40,7 +40,7 @@
     }
 
     function returnForbidden($reason = false){
-        if($reason){
+        if(!$reason){
             http_response_code(403);
             echo json_encode(array(
                 "status" => "unauthorized",
