@@ -18,18 +18,13 @@ function authenticate(){
 
     if (isset(getallheaders()['authorization'])) {
         list($type, $data) = explode(" ", getallheaders()['authorization'], 2);
-    } else if(isset($_SERVER['authorization'])) {
-        list($type, $data) = explode(" ", $_SERVER['authorization'], 2);
-    } else if(isset($_SERVER['PHP_AUTH_DIGEST'])) {
-        list($type, $data) = explode(" ", $_SERVER['PHP_AUTH_DIGEST'], 2);
+        if (strcasecmp($type, "Bearer") == 0) {
+            return $data;
+        } else {
+            returnForbidden("Token incorrectly formed");
+        }
     } else {
         returnForbidden("No token");
-    }
-
-    if (strcasecmp($type, "Bearer") == 0) {
-        return $data;
-    } else {
-        returnForbidden("Token incorrectly formed");
     }
 
 }
