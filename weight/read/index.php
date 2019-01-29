@@ -18,28 +18,40 @@ $data = json_decode(file_get_contents("php://input"));
 $token = authenticate();
 // ---- End of Authenticate Request
 
-// ---- Get needed Objects
-include_once '../../_config/objects/template.php';
-$template = new Template($db);
-// ---- End of Get needed Objects
+// ---- Include Object
+include_once '../../_config/objects/weight.php';
+$weight = new Weight($db);
+// ---- End of default Configuration
 
 try {
 
     $decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
-    $template->userid = $decoded->data->id;
-    $template->title = $data->title;
-    $template->calories = $data->calories;
-    $template->amount = $data->amount;
-    $template->image = $data->image;
+    $weight->userid = $decoded->data->id;
 
-    try {
-        $template->create();
-        returnSuccess($template->id);
-    } catch (Exception $e) {
-        returnError($e);
+    $stmt = $weight->read();
+    $num = $stmt->rowCount();
+
+    if($num>0){
+
+        $weights_arr=array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            extract($row);
+            $weight_item = array(
+                "id" => $id,
+                "weight" => $weight,
+                "measuredate" => $measuredate,
+            );
+            array_push($weights_arr, $weight_item);
+        }
+
+        returnSuccess($weights_arr);
+
+    } else {
+        returnNoData();
     }
 
-} catch(Exception $e) {
+} catch(Exception $e){
     returnForbidden($e);
 }
 

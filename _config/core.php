@@ -1,86 +1,107 @@
 <?php
 
-    // Application Params
-    error_reporting(E_ALL);
-    //error_reporting(0); <-- to deactivate
-    date_default_timezone_set('Europe/Zurich');
+// Application Params
+error_reporting(E_ALL);
+//error_reporting(0); <-- to deactivate
+date_default_timezone_set('Europe/Zurich');
 
-    $token_conf = array(
-        "secret" => 'lkiuerf@oja78781[ojaklj]JHjksa122:891',
-        "algorithm" => array('HS256'),
-        "issuer" => 'Official Minska API',
-        "issuedAt" => time(),
-        "notBefore" => time(),
-        "expireAt" => time() + (604800),
-    );
+$token_conf = array(
+    "secret" => 'lkiuerf@oja78781[ojaklj]JHjksa122:891',
+    "algorithm" => array('HS256'),
+    "issuer" => 'Official Minska API',
+    "issuedAt" => time(),
+    "notBefore" => time(),
+    "expireAt" => time() + (604800),
+);
 
-    function returnSuccess($data = false){
-        if($data){
-            http_response_code(200);
-            echo json_encode(array(
-                "status" => "success",
-                "message" => "Request successfully handled",
-                "content" => $data
-            ));
+function authenticate(){
+    if (isset(getallheaders()['Authorization'])) {
+        list($type, $data) = explode(" ", getallheaders()['Authorization'], 2);
+        if (strcasecmp($type, "Bearer") == 0) {
+            return $data;
         } else {
-            http_response_code(200);
-            echo json_encode(array(
-                "status" => "success",
-                "message" => "Request successfully handled (Returning no content)"
-            ));
+            returnForbidden("Token incorrectly formed");
         }
+    } else {
+        returnForbidden("No token");
     }
+}
 
-    function returnNoData(){
-        http_response_code(204);
+function returnSuccess($data = false){
+    http_response_code(200);
+    if($data){
         echo json_encode(array(
             "status" => "success",
-            "message" => "Request successfully handled but no data found"
+            "message" => "Request successfully handled",
+            "content" => $data
         ));
-    }
-
-    function returnForbidden($reason = false){
-        if(!$reason){
-            http_response_code(403);
-            echo json_encode(array(
-                "status" => "unauthorized",
-                "message" => "User is not authorized to perform this action"
-            ));
-        } else {
-            http_response_code(403);
-            echo json_encode(array(
-                "status" => "unauthorized",
-                "message" => "User is not authorized to perform this action",
-                "reason" => $reason
-            ));
-        }
-    }
-
-    function returnBadRequest(){
-        http_response_code(400);
+    } else {
         echo json_encode(array(
-            "status" => "failed",
-            "message" => "Bad Request: Values are wrong or missing.",
+            "status" => "success",
+            "message" => "Request successfully handled (Returning no content)"
         ));
     }
+    die();
+}
 
-    function returnError($reason = false){
-        if($reason){
-            http_response_code(500);
-            echo json_encode(array(
-                "status" => "error",
-                "message" => "An internal error occured",
-                "reason" => $reason
-            ));
-        } else {
-            http_response_code(500);
-            echo json_encode(array(
-                "status" => "error",
-                "message" => "An internal error occured",
-            ));
-        }
+function returnNoData(){
+    http_response_code(204);
+    echo json_encode(array(
+    "status" => "success",
+    "message" => "Request successfully handled but no data found"
+    ));
+    die();
+}
+
+function returnForbidden($reason = false){
+    http_response_code(403);
+    if($reason){
+        echo json_encode(array(
+        "status" => "unauthorized",
+        "message" => "User is not authorized to perform this action",
+        "reason" => $reason
+        ));
+    } else {
+        echo json_encode(array(
+        "status" => "unauthorized",
+        "message" => "User is not authorized to perform this action"
+        ));
     }
+    die();
+}
 
+function returnBadRequest($reason = false){
+    http_response_code(400);
+    if($reason){
+        echo json_encode(array(
+        "status" => "failed",
+        "message" => "Bad Request: Values are wrong or missing.",
+        "reason" => $reason
+        ));
+    } else {
+        echo json_encode(array(
+        "status" => "failed",
+        "message" => "Bad Request: Values are wrong or missing."
+        ));
+    }
+    die();
+}
 
+function returnError($reason = false){
+    http_response_code(500);
+    if($reason){
+        echo json_encode(array(
+        "status" => "error",
+        "message" => "An internal error occured",
+        "reason" => $reason
+        ));
+    } else {
+        echo json_encode(array(
+        "status" => "error",
+        "message" => "An internal error occured",
+        ));
+    }
+    die();
+}
 
 ?>
