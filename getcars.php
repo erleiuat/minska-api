@@ -1,11 +1,5 @@
 <?php
 
-
-    echo '<h1>getallheaders() Dump</h1><br />';
-    foreach (getallheaders() as $name => $value) {
-        print_r($name.' = '.$value.'<br />');
-    }
-
     echo '<br /><br /><br />';
     echo '<h1>$_SERVER Dump</h1><br />';
     foreach ($_SERVER as $name => $value) {
