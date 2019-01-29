@@ -16,10 +16,12 @@ $token_conf = array(
 
 function authenticate(){
 
-    if ( isset(getallheaders()['authorization']) ) {
+    if (isset(getallheaders()['authorization'])) {
         list($type, $data) = explode(" ", getallheaders()['authorization'], 2);
     } else if(isset($_SERVER['authorization'])) {
-        list($type, $data) = explode(" ", getallheaders()['authorization'], 2);
+        list($type, $data) = explode(" ", $_SERVER['authorization'], 2);
+    } else if(isset($_SERVER['PHP_AUTH_DIGEST'])) {
+        list($type, $data) = explode(" ", $_SERVER['PHP_AUTH_DIGEST'], 2);
     } else {
         returnForbidden("No token");
     }
