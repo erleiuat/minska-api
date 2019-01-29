@@ -15,7 +15,6 @@ $token_conf = array(
 );
 
 function authenticate(){
-
     if (isset(getallheaders()['Authorization'])) {
         list($type, $data) = explode(" ", getallheaders()['Authorization'], 2);
         if (strcasecmp($type, "Bearer") == 0) {
@@ -26,7 +25,6 @@ function authenticate(){
     } else {
         returnForbidden("No token");
     }
-
 }
 
 function returnSuccess($data = false){
