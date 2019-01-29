@@ -17,7 +17,7 @@ $token_conf = array(
 function authenticate(){
 
     if (isset(getallheaders()['Authorization'])) {
-        list($type, $data) = explode(" ", getallheaders()['authorization'], 2);
+        list($type, $data) = explode(" ", getallheaders()['Authorization'], 2);
         if (strcasecmp($type, "Bearer") == 0) {
             return $data;
         } else {
