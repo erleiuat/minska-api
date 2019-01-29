@@ -15,16 +15,21 @@ $token_conf = array(
 );
 
 function authenticate(){
-    if (isset(getallheaders()['authorization'])) {
+
+    if ( isset(getallheaders()['authorization']) ) {
         list($type, $data) = explode(" ", getallheaders()['authorization'], 2);
-        if (strcasecmp($type, "Bearer") == 0) {
-            return $data;
-        } else {
-            returnForbidden("Token incorrectly formed");
-        }
+    } else if(isset($_SERVER['authorization'])) {
+        list($type, $data) = explode(" ", getallheaders()['authorization'], 2);
     } else {
         returnForbidden("No token");
     }
+
+    if (strcasecmp($type, "Bearer") == 0) {
+        return $data;
+    } else {
+        returnForbidden("Token incorrectly formed");
+    }
+
 }
 
 function returnSuccess($data = false){
