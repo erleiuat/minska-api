@@ -18,11 +18,11 @@ class User {
     public $birthdate;
     public $aims;
 
-    public function __construct($db){
+    public function __construct($db) {
         $this->conn = $db;
     }
 
-    public function create(){
+    public function create() {
 
         $query = "
         INSERT INTO " . $this->db_table . " SET
@@ -33,23 +33,23 @@ class User {
 
         $stmt = $this->conn->prepare($query);
 
-        if(strlen($this->firstname) > 0 && strlen($this->lastname) > 0){
-            $this->firstname=htmlspecialchars(strip_tags($this->firstname));
-            $this->lastname=htmlspecialchars(strip_tags($this->lastname));
+        if (strlen($this->firstname)>0 && strlen($this->lastname)>0) {
+            $this->firstname = htmlspecialchars(strip_tags($this->firstname));
+            $this->lastname = htmlspecialchars(strip_tags($this->lastname));
         } else {
             throw new InvalidArgumentException('Invalid Firstname or Lastname');
         }
 
-        if($this->emailExists() || !filter_var($this->email, FILTER_VALIDATE_EMAIL)){
+        if ($this->emailExists() || !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException('E-Mail problematic');
         } else {
-            $this->email=htmlspecialchars(strip_tags($this->email));
+            $this->email = htmlspecialchars(strip_tags($this->email));
         }
 
-        if (strlen($this->password) < 8 && !preg_match("#[0-9]+#", $this->password) && !preg_match("#[a-zA-Z]+#", $this->password)) {
+        if (strlen($this->password)<8 && !preg_match("#[0-9]+#", $this->password) && !preg_match("#[a-zA-Z]+#", $this->password)) {
             throw new InvalidArgumentException('Invalid Password');
         } else {
-            $this->password=htmlspecialchars(strip_tags($this->password));
+            $this->password = htmlspecialchars(strip_tags($this->password));
         }
 
         $stmt->bindParam(':firstname', $this->firstname);
@@ -59,7 +59,7 @@ class User {
         $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
         $stmt->bindParam(':password', $password_hash);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             return true;
         }
 
@@ -67,7 +67,7 @@ class User {
 
     }
 
-    public function emailExists(){
+    public function emailExists() {
 
         $query = "
         SELECT ID, Firstname, Lastname, Email, Password, Language, IsFemale, Birthdate, Height, Aim_Weight, Aim_Date
@@ -76,12 +76,12 @@ class User {
         LIMIT 0,1
         ";
 
-        $this->email=htmlspecialchars(strip_tags($this->email));
+        $this->email = htmlspecialchars(strip_tags($this->email));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->email);
         $stmt->execute();
-        if($stmt->rowCount()>0){
+        if ($stmt->rowCount()>0) {
 
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             $this->id = $row['ID'];
@@ -104,7 +104,7 @@ class User {
 
     }
 
-    public function update(){
+    public function update() {
 
         $query = "
         UPDATE " . $this->db_table . " SET
@@ -120,14 +120,14 @@ class User {
         ";
 
         $stmt = $this->conn->prepare($query);
-        $this->firstname=htmlspecialchars(strip_tags($this->firstname));
-        $this->lastname=htmlspecialchars(strip_tags($this->lastname));
-        $this->language=htmlspecialchars(strip_tags($this->language));
-        $this->isFemale=htmlspecialchars(strip_tags($this->isFemale));
-        $this->birthdate=htmlspecialchars(strip_tags($this->birthdate));
-        $this->height=htmlspecialchars(strip_tags($this->height));
-        $this->aims->weight=htmlspecialchars(strip_tags($this->aims->weight));
-        $this->aims->date=htmlspecialchars(strip_tags($this->aims->date));
+        $this->firstname = htmlspecialchars(strip_tags($this->firstname));
+        $this->lastname = htmlspecialchars(strip_tags($this->lastname));
+        $this->language = htmlspecialchars(strip_tags($this->language));
+        $this->isFemale = htmlspecialchars(strip_tags($this->isFemale));
+        $this->birthdate = htmlspecialchars(strip_tags($this->birthdate));
+        $this->height = htmlspecialchars(strip_tags($this->height));
+        $this->aims->weight = htmlspecialchars(strip_tags($this->aims->weight));
+        $this->aims->date = htmlspecialchars(strip_tags($this->aims->date));
 
         $stmt->bindParam(':firstname', $this->firstname);
         $stmt->bindParam(':lastname', $this->lastname);
@@ -139,7 +139,7 @@ class User {
         $stmt->bindParam(':aim_date', $this->aims->date);
         $stmt->bindParam(':id', $this->id);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             return true;
         }
 

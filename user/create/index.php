@@ -19,7 +19,7 @@ include_once '../../_config/objects/user.php';
 $user = new User($db);
 // ---- End of default Configuration
 
-if($data->firstname && $data->lastname && $data->email && $data->password){
+if ($data->firstname && $data->lastname && $data->email && $data->password) {
 
     $user->firstname = $data->firstname;
     $user->lastname = $data->lastname;

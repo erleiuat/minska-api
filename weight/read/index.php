@@ -31,11 +31,11 @@ try {
     $stmt = $weight->read();
     $num = $stmt->rowCount();
 
-    if($num>0){
+    if ($num>0) {
 
-        $weights_arr=array();
+        $weights_arr = array();
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
             $weight_item = array(
                 "id" => $id,
@@ -51,7 +51,7 @@ try {
         returnNoData();
     }
 
-} catch(Exception $e){
+} catch (Exception $e) {
     returnForbidden($e);
 }
 

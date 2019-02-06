@@ -10,11 +10,11 @@ class Weight {
     public $weight;
     public $measuredate;
 
-    public function __construct($db){
+    public function __construct($db) {
         $this->conn = $db;
     }
 
-    public function read($amount = false, $order = 'DESC'){
+    public function read($amount = false, $order = 'DESC') {
 
         $query = "
         SELECT ID as id, Weight as weight, MeasureDate as measuredate, CreationDate as creationdate
@@ -22,8 +22,8 @@ class Weight {
         WHERE UserID = :userid
         ORDER BY CreationDate ". $order;
 
-        if($amount){
-            $query .= " LIMIT ". $amount;
+        if ($amount) {
+            $query .= " LIMIT " . $amount;
         }
 
         $stmt = $this->conn->prepare($query);
@@ -34,7 +34,7 @@ class Weight {
 
     }
 
-    public function create(){
+    public function create() {
 
         $query = "
             INSERT INTO " . $this->db_table . " SET
@@ -43,9 +43,9 @@ class Weight {
             MeasureDate = :measuredate
         ";
 
-        $this->userid=htmlspecialchars(strip_tags($this->userid));
-        $this->weight=htmlspecialchars(strip_tags($this->weight));
-        $this->measuredate=htmlspecialchars(strip_tags($this->measuredate));
+        $this->userid = htmlspecialchars(strip_tags($this->userid));
+        $this->weight = htmlspecialchars(strip_tags($this->weight));
+        $this->measuredate = htmlspecialchars(strip_tags($this->measuredate));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":userid", $this->userid);
@@ -53,7 +53,7 @@ class Weight {
         $stmt->bindParam(":measuredate", $this->measuredate);
 
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             $this->id = $this->conn->lastInsertId();
             return true;
         }
@@ -62,22 +62,22 @@ class Weight {
 
     }
 
-    public function delete(){
+    public function delete() {
 
         $query = "
         DELETE FROM " . $this->db_table . "
         WHERE ID = :id AND UserID = :userid
         ";
 
-        $this->id=htmlspecialchars(strip_tags($this->id));
-        $this->userid=htmlspecialchars(strip_tags($this->userid));
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        $this->userid = htmlspecialchars(strip_tags($this->userid));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":userid", $this->userid);
 
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
 
             return true;
 

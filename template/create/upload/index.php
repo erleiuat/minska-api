@@ -27,11 +27,11 @@ try {
 
     $decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
 
-    if($_FILES['img']['type'] == 'image/png'){
+    if ($_FILES['img']['type'] == 'image/png') {
         $source = imagecreatefrompng($_FILES['img']['tmp_name']);
-    } else if($_FILES['img']['type'] == 'image/jpeg') {
+    } else if ($_FILES['img']['type'] == 'image/jpeg') {
         $source = imagecreatefromjpeg($_FILES['img']['tmp_name']);
-    } else if($_FILES['img']['type'] == 'image/gif') {
+    } else if ($_FILES['img']['type'] == 'image/gif') {
         $source = imagecreatefromgif($_FILES['img']['tmp_name']);
     } else {
         returnBadRequest();
@@ -39,7 +39,7 @@ try {
     }
 
     list($width, $height) = getimagesize($_FILES['img']['tmp_name']);
-    $imageName = "minska-U".$decoded->data->id."U-T".time()."T-R".rand(100,999)."R.jpg";
+    $imageName = "minska-U" . $decoded->data->id . "U-T" . time() . "T-R" . rand(100, 999) . "R.jpg";
     $imageWidth = 300;
     $imageHeight = $height*($imageWidth/$width);
     $imageQuality = 80;
@@ -47,7 +47,7 @@ try {
 
     $rendered = imagecreatetruecolor($imageWidth, $imageHeight);
     imagecopyresampled($rendered, $source, 0, 0, 0, 0, $imageWidth, $imageHeight, $width, $height);
-    imagejpeg($rendered, $uploaddir ."/".$imageName, $imageQuality);
+    imagejpeg($rendered, $uploaddir . "/" . $imageName, $imageQuality);
 
     returnSuccess($imageName);
 

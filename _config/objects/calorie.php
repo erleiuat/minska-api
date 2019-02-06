@@ -12,11 +12,11 @@ class Calorie {
     public $amount;
     public $date;
 
-    public function __construct($db){
+    public function __construct($db) {
         $this->conn = $db;
     }
 
-    public function readByDay(){
+    public function readByDay() {
 
         $query = "
         SELECT ID as id, Title as title, Calories as calories, Amount as amount
@@ -34,7 +34,7 @@ class Calorie {
 
     }
 
-    public function readDays($order = 'DESC'){
+    public function readDays($order = 'DESC') {
 
         $query = "
         SELECT Date as date FROM ". $this->db_table . "
@@ -50,7 +50,7 @@ class Calorie {
 
     }
 
-    public function create(){
+    public function create() {
 
         $query = "
         INSERT INTO " . $this->db_table . " SET
@@ -61,11 +61,11 @@ class Calorie {
         Date = :date
         ";
 
-        $this->userid=htmlspecialchars(strip_tags($this->userid));
-        $this->title=htmlspecialchars(strip_tags($this->title));
-        $this->calories=htmlspecialchars(strip_tags($this->calories));
-        $this->amount=htmlspecialchars(strip_tags($this->amount));
-        $this->date=htmlspecialchars(strip_tags($this->date));
+        $this->userid = htmlspecialchars(strip_tags($this->userid));
+        $this->title = htmlspecialchars(strip_tags($this->title));
+        $this->calories = htmlspecialchars(strip_tags($this->calories));
+        $this->amount = htmlspecialchars(strip_tags($this->amount));
+        $this->date = htmlspecialchars(strip_tags($this->date));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":userid", $this->userid);
@@ -74,7 +74,7 @@ class Calorie {
         $stmt->bindParam(":amount", $this->amount);
         $stmt->bindParam(":date", $this->date);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             $this->id = $this->conn->lastInsertId();
             return true;
         }
@@ -83,21 +83,21 @@ class Calorie {
 
     }
 
-    public function delete(){
+    public function delete() {
 
         $query = "
         DELETE FROM " . $this->db_table . "
         WHERE ID = :id AND UserID = :userid
         ";
 
-        $this->id=htmlspecialchars(strip_tags($this->id));
-        $this->userid=htmlspecialchars(strip_tags($this->userid));
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        $this->userid = htmlspecialchars(strip_tags($this->userid));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":userid", $this->userid);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
 
             return true;
 
