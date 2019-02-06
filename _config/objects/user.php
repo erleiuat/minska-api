@@ -40,14 +40,10 @@ class User {
             throw new InvalidArgumentException('Invalid Firstname or Lastname');
         }
 
-        if($this->emailExists()){
-            throw new InvalidArgumentException('E-Mail already in use');
-        }
-
-        if(filter_var($this->email, FILTER_VALIDATE_EMAIL)){
-            $this->email=htmlspecialchars(strip_tags($this->email));
+        if($this->emailExists() || !filter_var($this->email, FILTER_VALIDATE_EMAIL)){
+            throw new InvalidArgumentException('E-Mail problematic');
         } else {
-            throw new InvalidArgumentException('Invalid E-Mail Adress');
+            $this->email=htmlspecialchars(strip_tags($this->email));
         }
 
         if (strlen($this->password) < 8 && !preg_match("#[0-9]+#", $this->password) && !preg_match("#[a-zA-Z]+#", $this->password)) {
