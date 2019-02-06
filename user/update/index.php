@@ -36,7 +36,7 @@ try {
     $user->birthdate = $data->birthdate;
     $user->aims = $data->aims;
 
-    if($user->update()){
+    if ($user->update()) {
 
         $token = array(
             "iss" => $token_conf['issuer'],
@@ -63,7 +63,7 @@ try {
                 returnError();
             }
 
-        } catch (Exception $e){
+        } catch (Exception $e) {
             returnForbidden($e);
         }
 

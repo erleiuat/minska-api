@@ -36,7 +36,7 @@ try {
         returnError($e);
     }
 
-} catch(Exception $e) {
+} catch (Exception $e) {
     returnForbidden($e);
 }
 

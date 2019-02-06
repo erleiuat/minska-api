@@ -14,7 +14,7 @@ $token_conf = array(
     "expireAt" => time() + (604800),
 );
 
-function authenticate(){
+function authenticate() {
     if (isset(getallheaders()['Authorization'])) {
         list($type, $data) = explode(" ", getallheaders()['Authorization'], 2);
         if (strcasecmp($type, "Bearer") == 0) {
@@ -27,9 +27,9 @@ function authenticate(){
     }
 }
 
-function returnSuccess($data = false){
+function returnSuccess($data = false) {
     http_response_code(200);
-    if($data){
+    if ($data) {
         echo json_encode(array(
             "status" => "success",
             "message" => "Request successfully handled",
@@ -44,7 +44,7 @@ function returnSuccess($data = false){
     die();
 }
 
-function returnNoData(){
+function returnNoData() {
     http_response_code(204);
     echo json_encode(array(
     "status" => "success",
@@ -53,9 +53,9 @@ function returnNoData(){
     die();
 }
 
-function returnForbidden($reason = false){
+function returnForbidden($reason = false) {
     http_response_code(403);
-    if($reason){
+    if ($reason) {
         echo json_encode(array(
         "status" => "unauthorized",
         "message" => "User is not authorized to perform this action",
@@ -70,9 +70,9 @@ function returnForbidden($reason = false){
     die();
 }
 
-function returnBadRequest($reason = false){
+function returnBadRequest($reason = false) {
     http_response_code(400);
-    if($reason){
+    if ($reason) {
         echo json_encode(array(
         "status" => "failed",
         "message" => "Bad Request: Values are wrong or missing.",
@@ -87,9 +87,9 @@ function returnBadRequest($reason = false){
     die();
 }
 
-function returnError($reason = false){
+function returnError($reason = false) {
     http_response_code(500);
-    if($reason){
+    if ($reason) {
         echo json_encode(array(
         "status" => "error",
         "message" => "An internal error occured",

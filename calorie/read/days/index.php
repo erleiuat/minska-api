@@ -31,12 +31,12 @@ try {
     $stmt = $calorie->readDays();
     $num = $stmt->rowCount();
 
-    if($num>0){
+    if ($num>0) {
 
         $i = 1;
-        $val_arr=array();
+        $val_arr = array();
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
             $val_item = array(
                 "date" => $date,
@@ -51,7 +51,7 @@ try {
         returnNoData();
     }
 
-} catch(Exception $e) {
+} catch (Exception $e) {
     returnForbidden($e);
 }
 

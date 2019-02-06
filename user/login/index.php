@@ -22,7 +22,7 @@ $user = new User($db);
 $user->email = $data->email;
 $email_exists = $user->emailExists();
 
-if($email_exists && password_verify($data->password, $user->password)){
+if ($email_exists && password_verify($data->password, $user->password)) {
 
     $token = array(
         "iss" => $token_conf['issuer'],

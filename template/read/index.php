@@ -31,11 +31,11 @@ try {
     $stmt = $template->read();
     $num = $stmt->rowCount();
 
-    if($num>0){
+    if ($num>0) {
 
-        $templates_arr=array();
+        $templates_arr = array();
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
             $template_item = array(
                 "id" => $id,
@@ -53,7 +53,7 @@ try {
         returnNoData();
     }
 
-} catch(Exception $e){
+} catch (Exception $e) {
     returnForbidden($e);
 }
 

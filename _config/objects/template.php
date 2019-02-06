@@ -12,19 +12,19 @@ class Template {
     public $amount;
     public $image;
 
-    public function __construct($db){
+    public function __construct($db) {
         $this->conn = $db;
     }
 
-    public function read($amount = false){
+    public function read($amount = false) {
 
         $query = "
         SELECT ID as id, Title as title, DefaultAmout as amount, Calories as calories, Image as image
         FROM ". $this->db_table . "
         WHERE UserID = :userid";
 
-        if($amount){
-            $query .= " LIMIT ". $amount;
+        if ($amount) {
+            $query .= " LIMIT " . $amount;
         }
 
         $stmt = $this->conn->prepare($query);
@@ -35,7 +35,7 @@ class Template {
 
     }
 
-    public function create(){
+    public function create() {
 
         $query = "
             INSERT INTO " . $this->db_table . " SET
@@ -46,11 +46,11 @@ class Template {
             Image = :image
         ";
 
-        $this->userid=htmlspecialchars(strip_tags($this->userid));
-        $this->title=htmlspecialchars(strip_tags($this->title));
-        $this->calories=htmlspecialchars(strip_tags($this->calories));
-        $this->amount=htmlspecialchars(strip_tags($this->amount));
-        $this->image=htmlspecialchars(strip_tags($this->image));
+        $this->userid = htmlspecialchars(strip_tags($this->userid));
+        $this->title = htmlspecialchars(strip_tags($this->title));
+        $this->calories = htmlspecialchars(strip_tags($this->calories));
+        $this->amount = htmlspecialchars(strip_tags($this->amount));
+        $this->image = htmlspecialchars(strip_tags($this->image));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":userid", $this->userid);
@@ -59,7 +59,7 @@ class Template {
         $stmt->bindParam(":calories", $this->calories);
         $stmt->bindParam(":image", $this->image);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
             $this->id = $this->conn->lastInsertId();
             return true;
         }
@@ -68,21 +68,21 @@ class Template {
 
     }
 
-    public function delete(){
+    public function delete() {
 
         $query = "
         DELETE FROM " . $this->db_table . "
         WHERE ID = :id AND UserID = :userid
         ";
 
-        $this->id=htmlspecialchars(strip_tags($this->id));
-        $this->userid=htmlspecialchars(strip_tags($this->userid));
+        $this->id = htmlspecialchars(strip_tags($this->id));
+        $this->userid = htmlspecialchars(strip_tags($this->userid));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":userid", $this->userid);
 
-        if($stmt->execute()){
+        if ($stmt->execute()) {
 
             return true;
 
