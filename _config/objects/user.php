@@ -14,6 +14,7 @@ class User {
     public $email;
     public $password;
     public $isFemale;
+    public $height;
     public $birthdate;
     public $aims;
 
