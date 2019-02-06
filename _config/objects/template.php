@@ -16,7 +16,7 @@ class Template {
         $this->conn = $db;
     }
 
-    public function read($amount = false, $order = 'DESC'){
+    public function read($amount = false){
 
         $query = "
         SELECT ID as id, Title as title, DefaultAmout as amount, Calories as calories, Image as image

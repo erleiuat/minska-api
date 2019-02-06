@@ -16,7 +16,7 @@ class Calorie {
         $this->conn = $db;
     }
 
-    public function readByDay($amount = false, $order = 'DESC'){
+    public function readByDay(){
 
         $query = "
         SELECT ID as id, Title as title, Calories as calories, Amount as amount
