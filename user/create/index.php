@@ -37,4 +37,4 @@ if($data->firstname && $data->lastname && $data->email && $data->password){
     returnBadRequest();
 }
 
-?>
+

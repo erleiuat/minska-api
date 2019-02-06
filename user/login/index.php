@@ -48,4 +48,4 @@ if($email_exists && password_verify($data->password, $user->password)){
 } else {
     returnBadRequest();
 }
-?>
+

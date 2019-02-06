@@ -16,7 +16,7 @@ class Template {
         $this->conn = $db;
     }
 
-    function read($amount = false, $order = 'DESC'){
+    public function read($amount = false, $order = 'DESC'){
 
         $query = "
         SELECT ID as id, Title as title, DefaultAmout as amount, Calories as calories, Image as image
@@ -35,7 +35,7 @@ class Template {
 
     }
 
-    function create(){
+    public function create(){
 
         $query = "
             INSERT INTO " . $this->db_table . " SET
@@ -68,7 +68,7 @@ class Template {
 
     }
 
-    function delete(){
+    public function delete(){
 
         $query = "
         DELETE FROM " . $this->db_table . "
@@ -93,4 +93,3 @@ class Template {
     }
 
 }
-?>

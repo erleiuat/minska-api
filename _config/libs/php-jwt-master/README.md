@@ -58,7 +58,7 @@ $decoded_array = (array) $decoded;
 JWT::$leeway = 60; // $leeway in seconds
 $decoded = JWT::decode($token, $token_conf['secret'], $token_conf['algorithm']);
 
-?>
+
 ```
 Example with RS256 (openssl)
 ----------------------------
@@ -112,7 +112,7 @@ $decoded = JWT::decode($jwt, $publicKey, array('RS256'));
 
 $decoded_array = (array) $decoded;
 echo "Decode:\n" . print_r($decoded_array, true) . "\n";
-?>
+
 ```
 
 Changelog

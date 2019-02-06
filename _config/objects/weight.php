@@ -14,7 +14,7 @@ class Weight {
         $this->conn = $db;
     }
 
-    function read($amount = false, $order = 'DESC'){
+    public function read($amount = false, $order = 'DESC'){
 
         $query = "
         SELECT ID as id, Weight as weight, MeasureDate as measuredate, CreationDate as creationdate
@@ -34,7 +34,7 @@ class Weight {
 
     }
 
-    function create(){
+    public function create(){
 
         $query = "
             INSERT INTO " . $this->db_table . " SET
@@ -62,7 +62,7 @@ class Weight {
 
     }
 
-    function delete(){
+    public function delete(){
 
         $query = "
         DELETE FROM " . $this->db_table . "
@@ -88,4 +88,3 @@ class Weight {
     }
 
 }
-?>

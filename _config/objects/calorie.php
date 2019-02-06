@@ -16,7 +16,7 @@ class Calorie {
         $this->conn = $db;
     }
 
-    function readByDay($amount = false, $order = 'DESC'){
+    public function readByDay($amount = false, $order = 'DESC'){
 
         $query = "
         SELECT ID as id, Title as title, Calories as calories, Amount as amount
@@ -34,7 +34,7 @@ class Calorie {
 
     }
 
-    function readDays($order = 'DESC'){
+    public function readDays($order = 'DESC'){
 
         $query = "
         SELECT Date as date FROM ". $this->db_table . "
@@ -50,7 +50,7 @@ class Calorie {
 
     }
 
-    function create(){
+    public function create(){
 
         $query = "
         INSERT INTO " . $this->db_table . " SET
@@ -83,7 +83,7 @@ class Calorie {
 
     }
 
-    function delete(){
+    public function delete(){
 
         $query = "
         DELETE FROM " . $this->db_table . "
@@ -108,4 +108,3 @@ class Calorie {
     }
 
 }
-?>

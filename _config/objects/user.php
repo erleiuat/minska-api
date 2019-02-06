@@ -21,7 +21,7 @@ class User {
         $this->conn = $db;
     }
 
-    function create(){
+    public function create(){
 
         $query = "
         INSERT INTO " . $this->db_table . " SET
@@ -70,7 +70,7 @@ class User {
 
     }
 
-    function emailExists(){
+    public function emailExists(){
 
         $query = "
         SELECT ID, Firstname, Lastname, Email, Password, Language, IsFemale, Birthdate, Height, Aim_Weight, Aim_Date
@@ -151,4 +151,3 @@ class User {
     }
 
 }
-?>
