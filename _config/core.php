@@ -15,13 +15,8 @@ $token_conf = array(
 );
 
 function authenticate() {
-    if (isset(getallheaders()['Authorization'])) {
-        list($type, $data) = explode(" ", getallheaders()['Authorization'], 2);
-        if (strcasecmp($type, "Bearer") == 0) {
-            return $data;
-        } else {
-            returnForbidden("Token incorrectly formed");
-        }
+    if (isset($_COOKIE["token"])) {
+        return $_COOKIE["token"];
     } else {
         returnForbidden("No token");
     }
@@ -103,5 +98,3 @@ function returnError($reason = false) {
     }
     die();
 }
-
-

@@ -56,5 +56,3 @@ try {
 } catch (Exception $e) {
     returnForbidden($e);
 }
-
-

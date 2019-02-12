@@ -1,5 +1,6 @@
 <?php
 
+
 // ---- Initialize Default
 include_once '../../_config/headers.php';
 include_once '../../_config/core.php';
@@ -43,9 +44,9 @@ if ($email_exists && password_verify($data->password, $user->password)) {
     );
 
     $jwt = JWT::encode($token, $token_conf['secret']);
+    setcookie("token", $jwt, $token_conf['expireAt'], "/", "localhost", 0, 1);
     returnSuccess($jwt);
 
 } else {
     returnBadRequest();
 }
-
