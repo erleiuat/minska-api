@@ -15,11 +15,19 @@ $token_conf = array(
 );
 
 function authenticate() {
-    if (isset($_COOKIE["token"])) {
-        return $_COOKIE["token"];
-    } else {
-        returnForbidden("No token");
+    if (isset($_COOKIE["appToken"]) && isset(getallheaders()['Authorization'])) {
+
+        list($type, $data) = explode(" ", getallheaders()['Authorization'], 2);
+        if (strcasecmp($type, "Bearer") == 0) {
+            if($_COOKIE["appToken"] === $data){
+                return $_COOKIE["appToken"];
+            }
+        }
+
     }
+
+    returnForbidden("Token-Auth unsuccessful");
+
 }
 
 function returnSuccess($data = false) {

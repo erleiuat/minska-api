@@ -46,12 +46,13 @@ if ($email_exists && password_verify($data->password, $user->password)) {
     $jwt = JWT::encode($token, $token_conf['secret']);
 
     try {
-        setcookie("token", $jwt, $token_conf['expireAt'], "/", "", isset($_SERVER["HTTPS"]), 1);
+        setcookie("secureToken", $jwt, $token_conf['expireAt'], "/; samesite=strict", "", isset($_SERVER['https']), 1);
+        setcookie("appToken", $jwt, time()+10, "/; samesite=strict", "", isset($_SERVER['https']), 0);
     } catch (Exception $e) {
         returnError();
     }
 
-    returnSuccess($jwt);
+    returnSuccess();
 
 } else {
     returnBadRequest();
