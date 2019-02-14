@@ -3,6 +3,6 @@
 include_once '../../_config/headers.php';
 include_once '../../_config/core.php';
 
-
-setcookie("token", false, time()-1000, "/", "localhost", 0, 1);
+$expire = time()-50;
+header("Set-Cookie: secureToken=null; Dexpires=$expire; Path=/; samesite=strict; httpOnly; $secure");
 returnSuccess($jwt);
