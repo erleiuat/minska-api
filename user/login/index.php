@@ -56,11 +56,11 @@ if ($email_exists && password_verify($data->password, $user->password)) {
         header ("Set-Cookie: secureToken=$jwt; expires=$expire; path=/; samesite=strict; httpOnly; $secure");
         header ("Set-Cookie: appToken=$jwt; expires=$expire; path=/; samesite=strict; $secure");
 
+        returnSuccess();
+
     } catch (Exception $e) {
         returnError();
     }
-
-    returnSuccess();
 
 } else {
     returnBadRequest();
