@@ -48,13 +48,15 @@ if ($email_exists && password_verify($data->password, $user->password)) {
     try {
 
         $secure = "";
+        $domain = ".eliareutlinger.ch";
+        //$domain = "localhost";
         $expire = $token_conf['expireAt'];
-        if(isset($_SERVER['https'])){
+        if(isset($_SERVER['HTTPS'])){
             $secure = "Secure";
         }
 
-        header ("Set-Cookie: secureToken=$jwt; expires=$expire; path=/; samesite=strict; httpOnly; $secure");
-        header ("Set-Cookie: appToken=$jwt; expires=$expire; path=/; samesite=strict; $secure");
+        header("Set-Cookie: appToken=$jwt; Domain=$domain; expires=$expire; Path=/; samesite=strict; $secure");
+        header("Set-Cookie: secureToken=$jwt; Domain=$domain; expires=$expire; Path=/; samesite=strict; httpOnly; $secure", false);
 
         returnSuccess();
 
