@@ -23,7 +23,7 @@ function authenticate() {
             if($_COOKIE["appToken"] === $data){
                 return $_COOKIE["appToken"];
             } else {
-                returnForbidden($data);
+                returnForbidden("Tokens not correct");
             }
 
         } else {
