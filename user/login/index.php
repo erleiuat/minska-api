@@ -54,8 +54,8 @@ if ($email_exists && password_verify($data->password, $user->password)) {
             $secure = "Secure";
         }
 
-        header("Set-Cookie: appToken=$jwt; Domain=; expires=$expire; Path=/; samesite=strict; $secure");
-        header("Set-Cookie: secureToken=$jwt; Domain=; expires=$expire; Path=/; samesite=strict; httpOnly; $secure", false);
+        header("Set-Cookie: appToken=$jwt; Domain=$domain; expires=$expire; Path=/; samesite=strict; $secure");
+        header("Set-Cookie: secureToken=$jwt; Domain=$domain; expires=$expire; Path=/; samesite=strict; httpOnly; $secure", false);
 
         returnSuccess();
 

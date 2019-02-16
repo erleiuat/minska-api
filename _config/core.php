@@ -19,14 +19,20 @@ function authenticate() {
 
         list($type, $data) = explode(" ", getallheaders()['Authorization'], 2);
         if (strcasecmp($type, "Bearer") == 0) {
+
             if($_COOKIE["appToken"] === $data){
                 return $_COOKIE["appToken"];
+            } else {
+                returnForbidden($data);
             }
+
+        } else {
+            returnForbidden("Auth-Token invalid.");
         }
 
+    } else {
+        returnForbidden("Required Tokens not found.");
     }
-
-    returnForbidden("Token-Auth unsuccessful");
 
 }
 
