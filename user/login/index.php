@@ -27,7 +27,7 @@ if ($email_exists && password_verify($data->password, $user->password)) {
     $token = array(
         "iss" => $token_conf['issuer'],
         "iat" => $token_conf['issuedAt'],
-        "exp" => $token_conf['expireAt'],
+        "exp" => $token_conf['expireDefault'],
         "nbf" => $token_conf['notBefore'],
         "data" => array(
             "id" => $user->id,
@@ -43,24 +43,8 @@ if ($email_exists && password_verify($data->password, $user->password)) {
     );
 
     $jwt = JWT::encode($token, $token_conf['secret']);
-
-    try {
-
-        $domain = ".eliareutlinger.ch";
-        //$domain = "localhost";
-        $expire = $token_conf['expireAt'];
-        $secure = "";
-        if(isset($_SERVER['HTTPS'])){
-            $secure = "Secure";
-        }
-
-        header("Set-Cookie: appToken=$jwt; Domain=$domain; expires=$expire; Path=/; samesite=strict; $secure");
-        header("Set-Cookie: secureToken=$jwt; Domain=$domain; expires=$expire; Path=/; samesite=strict; httpOnly; $secure", false);
-
+    if(setAuth($jwt, $token_conf['expireDefault'])){
         returnSuccess();
-
-    } catch (Exception $e) {
-        returnError();
     }
 
 } else {

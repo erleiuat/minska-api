@@ -11,8 +11,28 @@ $token_conf = array(
     "issuer" => 'Official Minska API',
     "issuedAt" => time(),
     "notBefore" => time(),
-    "expireAt" => time() + (604800),
+    "expireDefault" => time() + (604800),
 );
+
+function setAuth($token, $expire){
+
+    //$domain = "localhost";
+    $domain = ".eliareutlinger.ch";
+    $secure = false;
+    if(isset($_SERVER['HTTPS'])){
+        $secure = true;
+    }
+
+    $appCookie = setcookie ("appToken", $token, $expire, "/", $domain, $secure, false);
+    $secureCookie = setcookie ("secureToken", $token, $expire, "/", $domain, $secure, true);
+
+    if($appCookie && $secureCookie){
+        return true;
+    }
+
+    return false;
+
+}
 
 function authenticate() {
     if (isset($_COOKIE["appToken"]) && isset(getallheaders()['Authorization'])) {
@@ -40,14 +60,14 @@ function returnSuccess($data = false) {
     http_response_code(200);
     if ($data) {
         echo json_encode(array(
-            "status" => "success",
-            "message" => "Request successfully handled",
-            "content" => $data
+        "status" => "success",
+        "message" => "Request successfully handled",
+        "content" => $data
         ));
     } else {
         echo json_encode(array(
-            "status" => "success",
-            "message" => "Request successfully handled (Returning no content)"
+        "status" => "success",
+        "message" => "Request successfully handled (Returning no content)"
         ));
     }
     die();
