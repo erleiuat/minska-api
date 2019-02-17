@@ -46,10 +46,10 @@ if ($email_exists && password_verify($data->password, $user->password)) {
 
     try {
 
-        $secure = "";
         $domain = ".eliareutlinger.ch";
         //$domain = "localhost";
         $expire = $token_conf['expireAt'];
+        $secure = "";
         if(isset($_SERVER['HTTPS'])){
             $secure = "Secure";
         }
