@@ -17,7 +17,7 @@ $token_conf = array(
 function setAuth($token, $expire){
 
     //$domain = "localhost";
-    $domain = ".eliareutlinger.ch";
+    $domain = "minska.osis.io";
     $secure = false;
     if(isset($_SERVER['HTTPS'])){
         $secure = true;
