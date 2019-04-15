@@ -7,6 +7,7 @@ class User {
     private $conn;
     private $db_table = "user";
     private $db_confirm = "user_email_confirm";
+    private $db_detail = "user_detail";
     private $db_token_view = "view_usertoken";
     private $db_confirm_view = "view_mailconfirm";
 
@@ -116,10 +117,22 @@ class User {
 
     public function userToken(){
 
-        $query = "SELECT * FROM ".$this->db_token_view." WHERE Email = ?";
+        $query = "SELECT * FROM ".$this->db_token_view." ";
+
+        if($this->id){
+            $query .= "WHERE ID = ?";
+        } else {
+            $query .= "WHERE Email = ?";
+        }
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(1, $this->email);
+
+        if($this->id){
+            $stmt->bindParam(1, $this->id);
+        } else {
+            $stmt->bindParam(1, $this->email);
+        }
+
         $stmt->execute();
 
         if ($stmt->rowCount()===1) {
@@ -221,44 +234,38 @@ class User {
 
     public function update() {
 
-        $query = "
-        UPDATE " . $this->db_table . " SET
-        Firstname = :firstname,
-        Lastname = :lastname,
-        Language = :language,
-        IsFemale = :isFemale,
-        Birthdate = :birthdate,
-        Height = :height,
-        Aim_Weight = :aim_weight,
-        Aim_Date = :aim_date
-        WHERE ID = :id
+        $query1 = "
+        UPDATE user SET
+        Firstname = :firstname, Lastname = :lastname, Lang = :language
+        WHERE ID = :id";
+
+        $query2 = "
+        REPLACE INTO ". $this->db_detail . "
+        (`Gender`, `Height`, `Birthdate`, `Aim_Weight`, `Aim_Date`, `User_ID`) VALUES
+        (:gender, :height, :birthdate, :aim_weight, :aim_date, :id);
         ";
 
-        $stmt = $this->conn->prepare($query);
-        $this->firstname = htmlspecialchars(strip_tags($this->firstname));
-        $this->lastname = htmlspecialchars(strip_tags($this->lastname));
-        $this->language = htmlspecialchars(strip_tags($this->language));
-        $this->isFemale = htmlspecialchars(strip_tags($this->isFemale));
-        $this->birthdate = htmlspecialchars(strip_tags($this->birthdate));
-        $this->height = htmlspecialchars(strip_tags($this->height));
-        $this->aims->weight = htmlspecialchars(strip_tags($this->aims->weight));
-        $this->aims->date = htmlspecialchars(strip_tags($this->aims->date));
-
+        $stmt = $this->conn->prepare($query1);
         $stmt->bindParam(':firstname', $this->firstname);
         $stmt->bindParam(':lastname', $this->lastname);
         $stmt->bindParam(':language', $this->language);
-        $stmt->bindParam(':isFemale', $this->isFemale);
+        $stmt->bindParam(':id', $this->id);
+        if (!$stmt->execute()) {
+            throw new Exception('user_edit_error_1');
+        }
+
+        $stmt = $this->conn->prepare($query2);
+        $stmt->bindParam(':gender', $this->gender);
         $stmt->bindParam(':height', $this->height);
         $stmt->bindParam(':birthdate', $this->birthdate);
         $stmt->bindParam(':aim_weight', $this->aims->weight);
         $stmt->bindParam(':aim_date', $this->aims->date);
         $stmt->bindParam(':id', $this->id);
-
-        if ($stmt->execute()) {
-            return true;
+        if (!$stmt->execute()) {
+            throw new Exception('user_edit_error_2');
         }
 
-        return false;
+        return true;
 
     }
 

@@ -3,7 +3,7 @@
 class Weight {
 
     private $conn;
-    private $db_table = "weights";
+    private $db_table = "weight";
 
     public $id;
     public $userid;

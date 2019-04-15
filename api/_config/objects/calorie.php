@@ -3,7 +3,7 @@
 class Calorie {
 
     private $conn;
-    private $db_table = "calories";
+    private $db_table = "calorie";
 
     public $id;
     public $userid;

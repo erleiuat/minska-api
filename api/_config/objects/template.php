@@ -3,7 +3,7 @@
 class Template {
 
     private $conn;
-    private $db_table = "templates";
+    private $db_table = "template";
 
     public $id;
     public $userid;
