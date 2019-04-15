@@ -16,8 +16,8 @@ $token_conf = array(
 
 function setAuth($token, $expire){
 
-    //$domain = "localhost";
-    $domain = ".osis.io";
+    //$domain = ".osis.io";
+    $domain = "localhost";
     $secure = false;
     if(isset($_SERVER['HTTPS'])){
         $secure = true;
