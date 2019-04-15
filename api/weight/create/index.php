@@ -34,18 +34,12 @@ $weight = new Weight($db);
 try {
 
     $weight->userid = $decoded->data->id;
-    $weight->weight = $data->weight;
-    $weight->measuredate = $data->date;
+    $weight->weight = val_number($data->weight,10, 500);
+    $weight->measuredate = val_string($data->date,1, 20);
 
-    try {
-
-        $weight->create();
-        returnSuccess($weight->id);
-
-    } catch (Exception $e) {
-        returnError($e);
-    }
+    $weight->create();
+    returnSuccess($weight->id);
 
 } catch (Exception $e) {
-    returnForbidden($e);
+    returnBadRequest($e);
 }

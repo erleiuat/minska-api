@@ -19,10 +19,10 @@ class Calorie {
     public function readByDay() {
 
         $query = "
-        SELECT ID as id, Title as title, Calories as calories, Amount as amount
+        SELECT ID as id, Title as title, Calories_per_100 as calories, Amount as amount
         FROM ". $this->db_table . "
-        WHERE UserID = :userid
-        AND Date = :date
+        WHERE User_ID = :userid
+        AND Stamp_Consumed = :date
         ";
 
         $stmt = $this->conn->prepare($query);
@@ -37,10 +37,10 @@ class Calorie {
     public function readDays($order = 'DESC') {
 
         $query = "
-        SELECT Date as date FROM ". $this->db_table . "
-        WHERE UserID = :userid
-        GROUP BY Date
-        ORDER BY Date ".$order;
+        SELECT Stamp_Consumed as date FROM ". $this->db_table . "
+        WHERE User_ID = :userid
+        GROUP BY Stamp_Consumed
+        ORDER BY Stamp_Consumed ".$order;
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':userid', $this->userid);
@@ -54,18 +54,12 @@ class Calorie {
 
         $query = "
         INSERT INTO " . $this->db_table . " SET
-        UserID = :userid,
+        User_ID = :userid,
         Title = :title,
-        Calories = :calories,
+        Calories_per_100 = :calories,
         Amount = :amount,
-        Date = :date
+        Stamp_Consumed = :date
         ";
-
-        $this->userid = htmlspecialchars(strip_tags($this->userid));
-        $this->title = htmlspecialchars(strip_tags($this->title));
-        $this->calories = htmlspecialchars(strip_tags($this->calories));
-        $this->amount = htmlspecialchars(strip_tags($this->amount));
-        $this->date = htmlspecialchars(strip_tags($this->date));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":userid", $this->userid);
@@ -87,20 +81,15 @@ class Calorie {
 
         $query = "
         DELETE FROM " . $this->db_table . "
-        WHERE ID = :id AND UserID = :userid
+        WHERE ID = :id AND User_ID = :userid
         ";
-
-        $this->id = htmlspecialchars(strip_tags($this->id));
-        $this->userid = htmlspecialchars(strip_tags($this->userid));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":userid", $this->userid);
 
         if ($stmt->execute()) {
-
             return true;
-
         }
 
         return false;

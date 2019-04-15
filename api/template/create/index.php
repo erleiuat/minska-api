@@ -34,18 +34,14 @@ $template = new Template($db);
 try {
 
     $template->userid = $decoded->data->id;
-    $template->title = $data->title;
-    $template->calories = $data->calories;
-    $template->amount = $data->amount;
-    $template->image = $data->image;
+    $template->title = val_string($data->title,1,45);
+    $template->calories = val_number($data->calories,1,9999);
+    $template->amount = val_number($data->amount,1,9999);
+    $template->image = val_string($data->image,1,255);
 
-    try {
-        $template->create();
-        returnSuccess($template->id);
-    } catch (Exception $e) {
-        returnError($e);
-    }
+    $template->create();
+    returnSuccess($template->id);
 
 } catch (Exception $e) {
-    returnForbidden($e);
+    returnBadRequest($e);
 }

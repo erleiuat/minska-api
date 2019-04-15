@@ -40,7 +40,6 @@ try {
     if ($num>0) {
 
         $weights_arr = array();
-
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
             $weight_item = array(

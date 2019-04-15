@@ -17,10 +17,10 @@ class Weight {
     public function read($amount = false, $order = 'DESC') {
 
         $query = "
-        SELECT ID as id, Weight as weight, MeasureDate as measuredate, CreationDate as creationdate
+        SELECT ID as id, Weight as weight, Date_Weighed as measuredate, Stamp_Insert as creationdate
         FROM ". $this->db_table . "
-        WHERE UserID = :userid
-        ORDER BY CreationDate ". $order;
+        WHERE User_ID = :userid
+        ORDER BY Stamp_Insert ". $order;
 
         if ($amount) {
             $query .= " LIMIT " . $amount;
@@ -38,20 +38,15 @@ class Weight {
 
         $query = "
             INSERT INTO " . $this->db_table . " SET
-            UserID = :userid,
+            User_ID = :userid,
             Weight = :weight,
-            MeasureDate = :measuredate
+            Date_Weighed = :measuredate
         ";
-
-        $this->userid = htmlspecialchars(strip_tags($this->userid));
-        $this->weight = htmlspecialchars(strip_tags($this->weight));
-        $this->measuredate = htmlspecialchars(strip_tags($this->measuredate));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":userid", $this->userid);
         $stmt->bindParam(":weight", $this->weight);
         $stmt->bindParam(":measuredate", $this->measuredate);
-
 
         if ($stmt->execute()) {
             $this->id = $this->conn->lastInsertId();
@@ -66,21 +61,15 @@ class Weight {
 
         $query = "
         DELETE FROM " . $this->db_table . "
-        WHERE ID = :id AND UserID = :userid
+        WHERE ID = :id AND User_ID = :userid
         ";
-
-        $this->id = htmlspecialchars(strip_tags($this->id));
-        $this->userid = htmlspecialchars(strip_tags($this->userid));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":userid", $this->userid);
 
-
         if ($stmt->execute()) {
-
             return true;
-
         }
 
         return false;

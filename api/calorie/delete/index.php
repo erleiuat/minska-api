@@ -34,7 +34,7 @@ $calorie = new Calorie($db);
 try {
 
     $calorie->userid = $decoded->data->id;
-    $calorie->id = $data;
+    $calorie->id = val_number($data->id);
 
     try {
         $calorie->delete();

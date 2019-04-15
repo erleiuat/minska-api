@@ -34,15 +34,11 @@ $weight = new Weight($db);
 try {
 
     $weight->userid = $decoded->data->id;
-    $weight->id = $data;
+    $weight->id = val_number($data->id);
 
-    try {
-        $weight->delete();
-        returnSuccess();
-    } catch (Exception $e) {
-        returnError($e);
-    }
+    $weight->delete();
+    returnSuccess();
 
 } catch (Exception $e) {
-    returnForbidden($e);
+    returnBadRequest($e);
 }

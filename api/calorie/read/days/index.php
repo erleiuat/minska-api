@@ -44,9 +44,7 @@ try {
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
-            $val_item = array(
-                "date" => $date,
-            );
+            $val_item = array("date" => date_format(date_create($date), 'Y-m-d'));
             array_push($val_arr, $val_item);
             $i++;
         }

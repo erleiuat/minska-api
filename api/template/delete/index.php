@@ -34,7 +34,7 @@ $template = new Template($db);
 try {
 
     $template->userid = $decoded->data->id;
-    $template->id = $data;
+    $template->id = val_number($data->id);
 
     try {
         $template->delete();

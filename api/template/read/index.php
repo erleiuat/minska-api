@@ -40,7 +40,6 @@ try {
     if ($num>0) {
 
         $templates_arr = array();
-
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             extract($row);
             $template_item = array(

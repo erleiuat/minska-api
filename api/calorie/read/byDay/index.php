@@ -34,7 +34,7 @@ $calorie = new Calorie($db);
 try {
 
     $calorie->userid = $decoded->data->id;
-    $calorie->date = $data;
+    $calorie->date = val_string($data->date,1,20);
     $stmt = $calorie->readByDay();
     $num = $stmt->rowCount();
 

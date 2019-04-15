@@ -19,9 +19,9 @@ class Template {
     public function read($amount = false) {
 
         $query = "
-        SELECT ID as id, Title as title, DefaultAmout as amount, Calories as calories, Image as image
+        SELECT ID as id, Title as title, Default_Amount as amount, Calories_per_100 as calories, Image as image
         FROM ". $this->db_table . "
-        WHERE UserID = :userid";
+        WHERE User_ID = :userid";
 
         if ($amount) {
             $query .= " LIMIT " . $amount;
@@ -30,7 +30,6 @@ class Template {
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':userid', $this->userid);
         $stmt->execute();
-
         return $stmt;
 
     }
@@ -39,18 +38,12 @@ class Template {
 
         $query = "
             INSERT INTO " . $this->db_table . " SET
-            UserID = :userid,
+            User_ID = :userid,
             Title = :title,
-            DefaultAmout = :amount,
-            Calories = :calories,
+            Calories_per_100 = :calories,
+            Default_Amount = :amount,
             Image = :image
         ";
-
-        $this->userid = htmlspecialchars(strip_tags($this->userid));
-        $this->title = htmlspecialchars(strip_tags($this->title));
-        $this->calories = htmlspecialchars(strip_tags($this->calories));
-        $this->amount = htmlspecialchars(strip_tags($this->amount));
-        $this->image = htmlspecialchars(strip_tags($this->image));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":userid", $this->userid);
@@ -72,20 +65,15 @@ class Template {
 
         $query = "
         DELETE FROM " . $this->db_table . "
-        WHERE ID = :id AND UserID = :userid
+        WHERE ID = :id AND User_ID = :userid
         ";
-
-        $this->id = htmlspecialchars(strip_tags($this->id));
-        $this->userid = htmlspecialchars(strip_tags($this->userid));
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":userid", $this->userid);
 
         if ($stmt->execute()) {
-
             return true;
-
         }
 
         return false;

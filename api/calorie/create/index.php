@@ -34,10 +34,10 @@ $calorie = new Calorie($db);
 try {
 
     $calorie->userid = $decoded->data->id;
-    $calorie->title = $data->title;
-    $calorie->calories = $data->calories;
-    $calorie->amount = $data->amount;
-    $calorie->date = $data->date;
+    $calorie->title = val_string($data->title, 0, 45);
+    $calorie->calories = val_number($data->calories, 1, 9999);
+    $calorie->amount = val_number($data->amount, 1, 9999);
+    $calorie->date = val_string($data->date, 1, 20);
 
     try {
         $calorie->create();
