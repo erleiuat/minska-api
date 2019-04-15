@@ -2,7 +2,7 @@
 
 function sendMail($mail, $code, $url, $lang){
 
-    $subject_en = "Please confirm you new Account!";
+    $subject_en = "Activate your new Account on Minska!";
     $message_en = '
     <html>
         <head>
@@ -54,7 +54,7 @@ function sendMail($mail, $code, $url, $lang){
     </html>
     ';
 
-    $subject_de = "Bestätige deinen neuen Account!";
+    $subject_de = "Aktiviere deinen neuen Account auf Minska!";
     $message_de = '
     <html>
         <head>
