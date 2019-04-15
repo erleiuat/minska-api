@@ -21,28 +21,17 @@ include_once '../../_config/objects/user.php';
 $user = new User($db);
 // ---- End of Get needed Objects
 
+
 try {
 
-    $user->firstname = val_string($data->firstname, 1, 255);
-    $user->lastname = val_string($data->lastname, 1, 255);
     $user->email = val_email($data->email, 1, 89);
-    $user->language = val_string($data->language, 1, 3);
-    $user->password = val_string($data->password, 1, 255);
-    $confirm_code = $user->create();
+    $user->email_key = val_string($data->code, 20, 20);
 
-    if($api_conf['environment'] === "test"){
-        returnSuccess($confirm_code);
-    } else {
-
-        $subject = 'Please confirm your Account';
-        $message = 'Please confirm your account with this code: <b>'.$confirm_code. "</b> \r\n https://minska.osis.io/#/confirm";
-        $header = 'From: webmaster@example.com' . "\r\n" .
-                'Reply-To: webmaster@example.com' . "\r\n" .
-                'X-Mailer: PHP/' . phpversion();
-
-        mail($user->email, $subject, $message, $header);
+    if(password_verify($user->email_key, $user->getConfirmCode() )){
+        $user->confirmAccount();
         returnSuccess();
-
+    } else {
+        throw new Exception('code_invalid');
     }
 
 } catch (Exception $e) {

@@ -6,12 +6,15 @@ class User {
 
     private $conn;
     private $db_table = "user";
+    private $db_confirm = "user_email_confirm";
     private $db_token_view = "view_usertoken";
+    private $db_confirm_view = "view_mailconfirm";
 
     public $id;
     public $firstname;
     public $lastname;
     public $email;
+    public $email_key;
     public $language;
     public $password;
     public $gender;
@@ -25,16 +28,16 @@ class User {
 
     public function create() {
 
-        $query = "
-        INSERT INTO " . $this->db_table . " SET
-        Firstname = :firstname,
-        Lastname = :lastname,
-        Email = :email,
-        Email_Confirmed = false,
-        Lang = :language,
-        Password = :password";
+        $query1 = "
+        INSERT INTO " . $this->db_table . "
+        (`Firstname`, `Lastname`, `Email`, `Email_Confirmed`, `Lang`, `Password`) VALUES
+        (:firstname, :lastname, :email, false, :language, :password);";
 
-        $stmt = $this->conn->prepare($query);
+        $query2 = "
+        INSERT INTO " . $this->db_confirm . "
+        (`User_ID`, `Confirm_Code`) VALUES
+        (:id, :code);
+        ";
 
         if ($this->emailExists()) {
             throw new Exception('email_in_use');
@@ -44,19 +47,38 @@ class User {
             throw new Exception('password_invalid');
         }
 
+        $stmt = $this->conn->prepare($query1);
+        $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
         $stmt->bindParam(':firstname', $this->firstname);
         $stmt->bindParam(':lastname', $this->lastname);
         $stmt->bindParam(':email', $this->email);
         $stmt->bindParam(':language', $this->language);
-
-        $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
         $stmt->bindParam(':password', $password_hash);
 
         if ($stmt->execute()) {
-            return true;
+
+            $token = '';
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            for ($i = 0; $i < 20; $i++) {
+                $index = rand(0, strlen($characters) - 1);
+                $token .= $characters[$index];
+            }
+
+            $this->id = $this->conn->lastInsertId();
+            $token_hash = password_hash($token, PASSWORD_BCRYPT);
+            $stmt = $this->conn->prepare($query2);
+            $stmt->bindParam(':id', $this->id);
+            $stmt->bindParam(':code', $token_hash);
+
+            if ($stmt->execute()) {
+                return $token;
+            } else {
+                throw new Exception('token_generation_error');
+            }
+
         }
 
-        return false;
+        throw new Exception('user_creation_error');
 
     }
 
@@ -129,6 +151,71 @@ class User {
         } else {
             throw new Exception('email_not_found');
         }
+
+    }
+
+    public function getConfirmCode(){
+
+        $getKey = $query = "SELECT * FROM ".$this->db_confirm_view." WHERE Email = ?";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->email);
+        $stmt->execute();
+
+        if ($stmt->rowCount()===1) {
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if(!$row['Confirmed']){
+
+                $stamp_insert = date_timestamp_get(date_create($row['Inserted']));
+                $stamp_now = date_timestamp_get(date_create());
+                if(($stamp_now-$stamp_insert)<= 36000){
+                    return $row['Code'];
+                }
+
+                throw new Exception('code_expired');
+
+            } else {
+                throw new Exception('already_confirmed');
+            }
+
+        } else {
+            throw new Exception('email_not_found');
+        }
+
+
+    }
+
+    public function confirmAccount(){
+
+        $query1 = "SELECT ID FROM user WHERE Email = ?";
+        $query2 = "UPDATE user_email_confirm SET Stamp_Confirmed = CURRENT_TIMESTAMP WHERE User_ID = ?";
+        $query3 = "UPDATE user SET Email_Confirmed = '1' WHERE ID = ?";
+
+        $stmt = $this->conn->prepare($query1);
+        $stmt->bindParam(1, $this->email);
+        $stmt->execute();
+
+        if ($stmt->rowCount()===1) {
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->id = $row['ID'];
+
+            $stmt = $this->conn->prepare($query2);
+            $stmt->bindParam(1, $this->id);
+            if($stmt->execute()){
+
+                $stmt = $this->conn->prepare($query3);
+                $stmt->bindParam(1, $this->id);
+                if($stmt->execute()){
+                    return true;
+                }
+
+            }
+
+        }
+
+        throw new Exception('confirmation_error');
 
     }
 

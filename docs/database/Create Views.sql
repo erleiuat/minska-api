@@ -20,3 +20,17 @@ de.Aim_Date AS 'Aim_Date'
 
 FROM user AS us
 LEFT JOIN user_detail AS de ON de.User_ID = us.ID;
+
+
+-- -- VIEW 'view_mailconfirm'
+CREATE VIEW view_mailconfirm AS
+
+SELECT
+
+us.Email AS 'Email',
+us.Email_Confirmed AS 'Confirmed',
+co.Confirm_Code AS 'Code',
+co.Stamp_Insert AS 'Inserted'
+
+FROM user AS us
+LEFT JOIN user_email_confirm AS co ON co.User_ID = us.ID;
