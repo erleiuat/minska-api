@@ -33,16 +33,10 @@ try {
     if($api_conf['environment'] === "test"){
         returnSuccess($confirm_code);
     } else {
-
-        $subject = 'Please confirm your Account';
-        $message = 'Please confirm your account with this code: <b>'.$confirm_code. "</b> \r\n https://minska.osis.io/#/confirm";
-        $header = 'From: webmaster@example.com' . "\r\n" .
-                'Reply-To: webmaster@example.com' . "\r\n" .
-                'X-Mailer: PHP/' . phpversion();
-
-        mail($user->email, $subject, $message, $header);
+        include_once 'sendCodeMail.php';
+        $confirm_link = "minska.osis.io/#/confirm";
+        sendMail($user->email, $confirm_code, $confirm_link, $user->language);
         returnSuccess();
-
     }
 
 } catch (Exception $e) {

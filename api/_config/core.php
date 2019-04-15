@@ -1,8 +1,10 @@
 <?php
 
 function setAuth($token, $expire, $conf) {
+
     $appCookie = setcookie("appToken", $token, $expire, "/", $conf['domain'], $conf['secure'], false);
     $secureCookie = setcookie("secureToken", $token, $expire, "/", $conf['domain'], $conf['secure'], true);
+    
     if ($appCookie && $secureCookie) {
         return true;
     }

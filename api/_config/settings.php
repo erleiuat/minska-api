@@ -9,7 +9,7 @@ $api_conf = array(
     "environment" => "test", // 'test', 'prod'
     "corsOrigin" => "http://localhost:8080",
     "cookie" => array(
-        "domain" => "", //IE11 doesn't like this
+        "domain" => ".osis.io", //IE11 doesn't like this
         "secure" => false //Set TRUE if HTTPS
     )
 );
