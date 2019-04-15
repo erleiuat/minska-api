@@ -106,13 +106,13 @@ function sendMail($mail, $code, $url, $lang){
     </html>
     ';
 
+    $sender = "minska@osis.io";
+
     $header  = "MIME-Version: 1.0\r\n";
     $header .= "Content-type: text/html; charset=utf-8\r\n";
     $header .= "From: $sender\r\n";
     $header .= "Reply-To: $sender\r\n";
     $header .= "X-Mailer: PHP ". phpversion();
-
-    $sender = "minska@osis.io";
 
     if($lang === 'de'){
         mail($mail, $subject_de, $message_de, $header);
