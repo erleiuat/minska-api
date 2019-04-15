@@ -6,6 +6,7 @@ class User {
 
     private $conn;
     private $db_table = "user";
+    private $db_token_view = "view_usertoken";
 
     public $id;
     public $firstname;
@@ -71,6 +72,62 @@ class User {
             return true;
         } else {
             return false;
+        }
+
+    }
+
+    public function getPassword() {
+
+        $query = "SELECT Password FROM ".$this->db_table." WHERE Email = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->email);
+        $stmt->execute();
+
+        if ($stmt->rowCount()===1) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $row['Password'];
+        } else {
+            throw new Exception('email_not_found');
+        }
+
+    }
+
+    public function userToken(){
+
+        $query = "SELECT * FROM ".$this->db_token_view." WHERE Email = ?";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $this->email);
+        $stmt->execute();
+
+        if ($stmt->rowCount()===1) {
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            $this->aims = new stdClass();
+
+            if($row['Email_Confirmed']){
+
+                $this->id = $row['ID'];
+                $this->firstname = $row['Firstname'];
+                $this->lastname = $row['Lastname'];
+                $this->language = $row['Language'];
+                $this->email = $row['Email'];
+
+                $this->gender = $row['Gender'];
+                $this->height = $row['Height'];
+                $this->birthdate = $row['Birthdate'];
+
+                $this->aims->weight = $row['Aim_Weight'];
+                $this->aims->date = $row['Aim_Date'];
+
+                return true;
+
+            } else {
+                throw new Exception('email_not_confirmed');
+            }
+
+        } else {
+            throw new Exception('email_not_found');
         }
 
     }
