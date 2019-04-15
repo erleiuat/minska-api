@@ -5,15 +5,15 @@
 class User {
 
     private $conn;
-    private $db_table = "users";
+    private $db_table = "user";
 
     public $id;
-    public $language;
     public $firstname;
     public $lastname;
     public $email;
+    public $language;
     public $password;
-    public $isFemale;
+    public $gender;
     public $height;
     public $birthdate;
     public $aims;
@@ -29,32 +29,24 @@ class User {
         Firstname = :firstname,
         Lastname = :lastname,
         Email = :email,
+        Email_Confirmed = false,
+        Lang = :language,
         Password = :password";
 
         $stmt = $this->conn->prepare($query);
 
-        if (strlen($this->firstname)>0 && strlen($this->lastname)>0) {
-            $this->firstname = htmlspecialchars(strip_tags($this->firstname));
-            $this->lastname = htmlspecialchars(strip_tags($this->lastname));
-        } else {
-            throw new InvalidArgumentException('Invalid Firstname or Lastname');
-        }
-
-        if ($this->emailExists() || !filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException('E-Mail problematic');
-        } else {
-            $this->email = htmlspecialchars(strip_tags($this->email));
+        if ($this->emailExists()) {
+            throw new Exception('email_in_use');
         }
 
         if (strlen($this->password)<8 && !preg_match("#[0-9]+#", $this->password) && !preg_match("#[a-zA-Z]+#", $this->password)) {
-            throw new InvalidArgumentException('Invalid Password');
-        } else {
-            $this->password = htmlspecialchars(strip_tags($this->password));
+            throw new Exception('password_invalid');
         }
 
         $stmt->bindParam(':firstname', $this->firstname);
         $stmt->bindParam(':lastname', $this->lastname);
         $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':language', $this->language);
 
         $password_hash = password_hash($this->password, PASSWORD_BCRYPT);
         $stmt->bindParam(':password', $password_hash);
@@ -69,37 +61,16 @@ class User {
 
     public function emailExists() {
 
-        $query = "
-        SELECT ID, Firstname, Lastname, Email, Password, Language, IsFemale, Birthdate, Height, Aim_Weight, Aim_Date
-        FROM " . $this->db_table . "
-        WHERE Email = ?
-        LIMIT 0,1
-        ";
-
-        $this->email = htmlspecialchars(strip_tags($this->email));
+        $query = "SELECT ID FROM " . $this->db_table . " WHERE Email = ?";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $this->email);
         $stmt->execute();
+
         if ($stmt->rowCount()>0) {
-
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            $this->id = $row['ID'];
-            $this->language = $row['Language'];
-            $this->firstname = $row['Firstname'];
-            $this->lastname = $row['Lastname'];
-            $this->email = $row['Email'];
-            $this->birthdate = $row['Birthdate'];
-            $this->isFemale = $row['IsFemale'];
-            $this->height = $row['Height'];
-            $this->password = $row['Password'];
-            $this->aims = array(
-            "weight" => $row['Aim_Weight'],
-            "date" => $row['Aim_Date']
-            );
-
             return true;
-
+        } else {
+            return false;
         }
 
     }

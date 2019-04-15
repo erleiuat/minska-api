@@ -1,32 +1,11 @@
 <?php
 
-// Application Params
-error_reporting(E_ALL);
-//error_reporting(0); <-- to deactivate
-date_default_timezone_set('Europe/Zurich');
+function setAuth($token, $expire, $conf) {
 
-$token_conf = array(
-    "secret" => 'lkiuerf@oja78781[ojaklj]JHjksa122:891',
-    "algorithm" => array('HS256'),
-    "issuer" => 'Official Minska API',
-    "issuedAt" => time(),
-    "notBefore" => time(),
-    "expireDefault" => time() + (604800),
-);
+    $appCookie = setcookie("appToken", $token, $expire, "/", $conf['domain'], $conf['secure'], false);
+    $secureCookie = setcookie("secureToken", $token, $expire, "/", $conf['domain'], $conf['secure'], true);
 
-function setAuth($token, $expire){
-
-    //$domain = ".osis.io";
-    $domain = "localhost";
-    $secure = false;
-    if(isset($_SERVER['HTTPS'])){
-        $secure = true;
-    }
-
-    $appCookie = setcookie ("appToken", $token, $expire, "/", $domain, $secure, false);
-    $secureCookie = setcookie ("secureToken", $token, $expire, "/", $domain, $secure, true);
-
-    if($appCookie && $secureCookie){
+    if ($appCookie && $secureCookie) {
         return true;
     }
 
@@ -36,24 +15,19 @@ function setAuth($token, $expire){
 
 function authenticate() {
     if (isset($_COOKIE["appToken"]) && isset(getallheaders()['Authorization'])) {
-
         list($type, $data) = explode(" ", getallheaders()['Authorization'], 2);
         if (strcasecmp($type, "Bearer") == 0) {
-
-            if($_COOKIE["appToken"] === $data){
+            if ($_COOKIE["appToken"] === $data) {
                 return $_COOKIE["appToken"];
             } else {
                 returnForbidden("Tokens not correct");
             }
-
         } else {
             returnForbidden("Auth-Token invalid.");
         }
-
     } else {
         returnForbidden("Required Tokens not found.");
     }
-
 }
 
 function returnSuccess($data = false) {

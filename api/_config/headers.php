@@ -1,10 +1,7 @@
 <?php
 
-$http_origin = $_SERVER['HTTP_ORIGIN'];
-if ($http_origin == "http://localhost:8080" || $http_origin == "https://minska.osis.io"){
-    header("Access-Control-Allow-Origin: $http_origin");
-}
-
+$http_origin = $api_conf['corsOrigin'];
+header("Access-Control-Allow-Origin: $http_origin");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST, GET");
 header("Access-Control-Allow-Credentials: true");
