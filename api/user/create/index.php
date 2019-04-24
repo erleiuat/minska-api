@@ -34,7 +34,7 @@ try {
         returnSuccess($confirm_code);
     } else {
         include_once 'sendCodeMail.php';
-        $confirm_link = "minska.osis.io/#/confirm";
+        $confirm_link = "minska.osis.io/confirm";
         sendMail($user->email, $confirm_code, $confirm_link, $user->language);
         returnSuccess();
     }
